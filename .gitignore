@@ -1,0 +1,11 @@
+node_modules
+.nuxt
+.output
+dist
+.data
+*.log
+.DS_Store
+.env
+test-results
+playwright-report
+.claude/settings.local.json
