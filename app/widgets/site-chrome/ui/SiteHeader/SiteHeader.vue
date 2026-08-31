@@ -1,16 +1,46 @@
 <script setup lang="ts">
+import { onBeforeUnmount, onMounted, ref } from 'vue'
 import { Wordmark } from '~/shared/ui'
 import { LocaleSwitch } from '~/widgets/site-chrome/ui/LocaleSwitch'
 import { NAV_SECTIONS } from '~/shared/config/site'
 import { useBag } from '~/shared/lib'
+import { CONDENSE_SCROLL_PX } from '~/widgets/site-chrome/ui/SiteHeader/constants'
 
 const { t } = useI18n()
 const bag = useBag()
+
+// Off the very top → the pill unfolds into a full-bleed bar (see the class
+// binding below). rAF-throttled, same pattern as BackdropScenes.
+const condensed = ref(false)
+let ticking = false
+let cleanup: (() => void) | undefined
+
+onMounted(() => {
+  const measure = () => {
+    ticking = false
+    condensed.value = window.scrollY > CONDENSE_SCROLL_PX
+  }
+  const onScroll = () => {
+    if (ticking) return
+    ticking = true
+    requestAnimationFrame(measure)
+  }
+  measure()
+  window.addEventListener('scroll', onScroll, { passive: true })
+  cleanup = () => window.removeEventListener('scroll', onScroll)
+})
+
+onBeforeUnmount(() => cleanup?.())
 </script>
 
 <template>
   <header
-    class="panel sticky top-0 z-40 mx-3 mt-3 flex items-center justify-between gap-4 rounded-panel bg-ground/80 px-5 py-3 backdrop-blur"
+    :class="[
+      'sticky top-0 z-40 flex items-center justify-between gap-4 border border-line px-5 py-3 backdrop-blur transition-[margin,border-radius,border-width,background-color] duration-[350ms] ease-out motion-reduce:transition-none',
+      condensed
+        ? 'mx-0 mt-0 rounded-none border-x-0 border-t-0 bg-ground/95'
+        : 'mx-3 mt-3 rounded-panel bg-ground/80',
+    ]"
   >
     <Wordmark class="text-sm" />
     <nav

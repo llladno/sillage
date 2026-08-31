@@ -6,6 +6,13 @@ import { loadGsap } from '~/shared/lib'
 const MS_PER_SECOND = 1000
 
 export default defineNuxtPlugin(async () => {
+  // Every load replays the intro from the top — stop the browser restoring the
+  // previous scroll position on reload / back-forward.
+  if ('scrollRestoration' in window.history) {
+    window.history.scrollRestoration = 'manual'
+  }
+  window.scrollTo(0, 0)
+
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
 
   const [{ default: Lenis }, gsapContext] = await Promise.all([
@@ -16,6 +23,7 @@ export default defineNuxtPlugin(async () => {
 
   const { gsap, ScrollTrigger } = gsapContext
   const lenis = new Lenis({ anchors: true })
+  lenis.scrollTo(0, { immediate: true })
 
   lenis.on('scroll', ScrollTrigger.update)
   gsap.ticker.add((time) => lenis.raf(time * MS_PER_SECOND))
