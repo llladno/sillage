@@ -4,40 +4,35 @@ import { clamp } from '~/shared/lib'
 import {
   ALPHA_MAX,
   ALPHA_MIN,
-  BASE_FALL,
+  BAND_HALF_WIDTH_FRAC,
+  BAND_MARGIN_FRAC,
   DEPTH_FLOOR,
-  FIELD_ANGLE_RANGE,
-  FLOW_DRIFT,
-  FLOW_SCROLL_GAIN,
+  EDGE_FEATHER,
+  FALL_MAX,
+  FALL_MIN,
   GLOW_CORE_ALPHA,
   GLOW_MID_ALPHA,
   GLOW_MID_STOP,
-  HASH_MAX,
-  HASH_MIX,
-  HASH_PRIME_X,
-  HASH_PRIME_Y,
-  HASH_SHIFT_A,
-  HASH_SHIFT_B,
-  NOISE_MIDPOINT,
-  NOISE_SCALE,
   PARTICLE_COUNT,
   SCROLL_COUPLING,
   SCROLL_VELOCITY_DECAY,
   SIZE_MAX,
   SIZE_MIN,
   SPAWN_MARGIN,
-  SPEED_MAX,
-  SPEED_MIN,
   SPRITE_SIZE,
+  SWAY_AMPLITUDE_FRAC,
+  SWAY_SPEED,
+  SWEEP_LEAD_FRAC,
   TONE_RGB,
-} from '~/shared/ui/ScentField/constants'
+} from '~/shared/ui/SillageTrail/constants'
 
 type Mote = {
-  x: number
+  offsetX: number
   y: number
-  speed: number
+  fall: number
   size: number
   alpha: number
+  phase: number
   tone: number
 }
 
@@ -45,29 +40,6 @@ const canvas = ref<HTMLCanvasElement | null>(null)
 const opacity = ref(0)
 
 const between = (min: number, max: number) => min + Math.random() * (max - min)
-
-const hashCell = (xCell: number, yCell: number) => {
-  const blended = xCell * HASH_PRIME_X + yCell * HASH_PRIME_Y
-  const churned = (blended ^ (blended >>> HASH_SHIFT_A)) * HASH_MIX
-  return ((churned ^ (churned >>> HASH_SHIFT_B)) >>> 0) / HASH_MAX
-}
-
-const easeCell = (fraction: number) => fraction * fraction * (3 - 2 * fraction)
-
-// Value-noise flow field — organic streams without a noise library.
-const flowNoise = (xCoord: number, yCoord: number) => {
-  const xBase = Math.floor(xCoord)
-  const yBase = Math.floor(yCoord)
-  const xFraction = easeCell(xCoord - xBase)
-  const yFraction = easeCell(yCoord - yBase)
-  const cornerTopLeft = hashCell(xBase, yBase)
-  const cornerTopRight = hashCell(xBase + 1, yBase)
-  const cornerLowLeft = hashCell(xBase, yBase + 1)
-  const cornerLowRight = hashCell(xBase + 1, yBase + 1)
-  const edgeTop = cornerTopLeft + (cornerTopRight - cornerTopLeft) * xFraction
-  const edgeLow = cornerLowLeft + (cornerLowRight - cornerLowLeft) * xFraction
-  return edgeTop + (edgeLow - edgeTop) * yFraction
-}
 
 let cleanup: (() => void) | undefined
 
@@ -81,7 +53,6 @@ onMounted(() => {
   let width = 0
   let height = 0
   let frame = 0
-  let flowOffset = 0
   let lastScrollY = window.scrollY
   let scrollVelocity = 0
   const motes: Mote[] = []
@@ -103,14 +74,17 @@ onMounted(() => {
     return sprite
   })
 
+  const halfBand = () => width * BAND_HALF_WIDTH_FRAC
+
   const seed = () => {
     for (let index = 0; index < PARTICLE_COUNT; index += 1) {
       motes.push({
-        x: Math.random() * width,
+        offsetX: between(-halfBand(), halfBand()),
         y: Math.random() * height,
-        speed: between(SPEED_MIN, SPEED_MAX),
+        fall: between(FALL_MIN, FALL_MAX),
         size: between(SIZE_MIN, SIZE_MAX),
         alpha: between(ALPHA_MIN, ALPHA_MAX),
+        phase: Math.random() * Math.PI * 2,
         tone: Math.floor(Math.random() * sprites.length),
       })
     }
@@ -134,17 +108,29 @@ onMounted(() => {
     opacity.value = clamp(1 - top / window.innerHeight, 0, 1)
   }
 
+  // The band's centre migrates left → right as the reader moves from the
+  // composition anchor to the bottom of the page.
+  const bandCentreX = () => {
+    const anchor = document.querySelector('#composition')
+    if (!anchor) return width * BAND_MARGIN_FRAC
+    const anchorTopDoc = anchor.getBoundingClientRect().top + window.scrollY
+    const startY = anchorTopDoc - window.innerHeight * SWEEP_LEAD_FRAC
+    const endY = document.documentElement.scrollHeight - window.innerHeight
+    const span = Math.max(endY - startY, 1)
+    const travelled = clamp((window.scrollY - startY) / span, 0, 1)
+    return (BAND_MARGIN_FRAC + travelled * (1 - 2 * BAND_MARGIN_FRAC)) * width
+  }
+
   const onScroll = () => {
     scrollVelocity += window.scrollY - lastScrollY
     lastScrollY = window.scrollY
     updateGate()
   }
 
-  const step = () => {
+  const step = (time: number) => {
     scrollVelocity *= SCROLL_VELOCITY_DECAY
-    flowOffset += FLOW_DRIFT + Math.abs(scrollVelocity) * FLOW_SCROLL_GAIN
 
-    // Idle cheaply while the field is invisible (through the whole hero).
+    // Idle cheaply while the trail is invisible (through the whole hero).
     if (opacity.value === 0) {
       frame = requestAnimationFrame(step)
       return
@@ -152,29 +138,35 @@ onMounted(() => {
 
     context.clearRect(0, 0, width, height)
     context.globalCompositeOperation = 'lighter'
+
+    const centreX = bandCentreX()
+    const edge = halfBand()
+    const swayMax = width * SWAY_AMPLITUDE_FRAC
     const pull = scrollVelocity * SCROLL_COUPLING
 
     for (const mote of motes) {
       const depth = mote.size / SIZE_MAX + DEPTH_FLOOR
-      const field = flowNoise(mote.x * NOISE_SCALE, mote.y * NOISE_SCALE + flowOffset)
-      const angle = (field - NOISE_MIDPOINT) * FIELD_ANGLE_RANGE
-      mote.x += Math.sin(angle) * mote.speed
-      mote.y += Math.cos(angle) * mote.speed + (BASE_FALL + pull) * depth
+      mote.y += (mote.fall + pull) * depth
 
       if (mote.y > height + SPAWN_MARGIN) {
         mote.y = -SPAWN_MARGIN
-        mote.x = Math.random() * width
+        mote.offsetX = between(-edge, edge)
       } else if (mote.y < -SPAWN_MARGIN) {
         mote.y = height + SPAWN_MARGIN
-        mote.x = Math.random() * width
+        mote.offsetX = between(-edge, edge)
       }
-      if (mote.x > width + SPAWN_MARGIN) mote.x = -SPAWN_MARGIN
-      else if (mote.x < -SPAWN_MARGIN) mote.x = width + SPAWN_MARGIN
 
-      context.globalAlpha = mote.alpha
+      const sway = Math.sin(time * SWAY_SPEED + mote.phase) * swayMax
+      const drawX = centreX + mote.offsetX + sway
+      const falloff = Math.pow(
+        clamp(1 - Math.abs(mote.offsetX) / edge, 0, 1),
+        EDGE_FEATHER,
+      )
+
+      context.globalAlpha = mote.alpha * falloff
       context.drawImage(
         sprites[mote.tone] ?? sprites[0]!,
-        mote.x - mote.size / 2,
+        drawX - mote.size / 2,
         mote.y - mote.size / 2,
         mote.size,
         mote.size,
