@@ -3,7 +3,9 @@ import type { HeroBeat } from '~/widgets/scrub-hero/model/types'
 export const FRAME_COUNT = 121
 export const FRAME_PATH_PREFIX = '/sequence/frame-'
 export const FRAME_PATH_EXT = 'webp'
-export const STAGE_SCROLL_VH = 320
+// Shorter stage → the 121 frames pass under less scroll, so the scrub reads
+// faster and a dropped frame is on screen for less time.
+export const STAGE_SCROLL_VH = 215
 export const USE_PLACEHOLDER = false
 export const MOBILE_MAX_WIDTH = 768
 

@@ -5,6 +5,7 @@ import { getFragrance, NoteList } from '~/entities/fragrance'
 import { loadGsap } from '~/shared/lib'
 import type { Locale } from '~/shared/config/i18n'
 import {
+  BACKDROP_EDGE_MASK,
   BACKDROP_PARALLAX_PERCENT,
   DEFAULT_ROW_PARALLAX,
   REVEAL_START,
@@ -66,11 +67,12 @@ onBeforeUnmount(() => kill?.())
 
 <template>
   <SectionShell id="composition" title-key="sections.composition.title">
-    <div ref="root" class="relative overflow-hidden">
+    <div ref="root" class="relative overflow-x-clip">
       <div
         data-backdrop
         aria-hidden="true"
-        class="pointer-events-none absolute -inset-x-6 top-0 flex flex-col font-display text-[22vw] uppercase leading-[0.8] tracking-tight text-ink/5"
+        class="pointer-events-none absolute -inset-x-6 top-1/2 flex -translate-y-1/2 flex-col font-display text-[16vw] uppercase leading-[0.82] tracking-tight text-ink/5"
+        :style="{ maskImage: BACKDROP_EDGE_MASK, WebkitMaskImage: BACKDROP_EDGE_MASK }"
       >
         <span v-for="tier in TIERS" :key="tier">{{ t(`composition.${tier}`) }}</span>
       </div>

@@ -1,7 +1,12 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import type { BackdropSide } from '~/widgets/backdrop-scenes/model/constants'
-import { PEAK_OPACITY, SCENE_WIDTH_VW } from '~/widgets/backdrop-scenes/model/constants'
+import {
+  PEAK_OPACITY,
+  SCENE_IMG_HEIGHT,
+  SCENE_IMG_WIDTH,
+  SCENE_WIDTH_VW,
+} from '~/widgets/backdrop-scenes/model/constants'
 
 const props = defineProps<{
   src: string
@@ -10,13 +15,16 @@ const props = defineProps<{
   drift: number
 }>()
 
+// Melt the inner edge and corners into the ground so text never fights it.
 const maskGradient = computed(() => {
   const origin = props.side === 'left' ? 'left' : 'right'
-  return `radial-gradient(135% 100% at ${origin} center, #000 24%, transparent 78%)`
+  return `radial-gradient(135% 105% at ${origin} center, #000 22%, transparent 82%)`
 })
 </script>
 
 <template>
+  <!-- Plain <img>, not <NuxtImg>: this layer is client-only, so IPX never
+       prerenders these URLs — the raw file in /public is what ships. -->
   <div
     data-backdrop-scene
     aria-hidden="true"
@@ -28,15 +36,15 @@ const maskGradient = computed(() => {
       transform: `translate3d(0, ${drift}px, 0)`,
     }"
   >
-    <NuxtImg
+    <img
       :src="src"
-      width="1200"
-      height="1600"
-      sizes="60vw"
-      loading="lazy"
+      :width="SCENE_IMG_WIDTH"
+      :height="SCENE_IMG_HEIGHT"
       alt=""
       aria-hidden="true"
-      class="h-full w-full object-cover [mix-blend-mode:screen]"
+      decoding="async"
+      loading="lazy"
+      class="h-full w-full object-cover [filter:brightness(0.86)]"
       :style="{ maskImage: maskGradient, WebkitMaskImage: maskGradient }"
     />
   </div>

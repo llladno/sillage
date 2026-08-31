@@ -2,11 +2,7 @@
 import { onBeforeUnmount, onMounted, reactive } from 'vue'
 import { clamp } from '~/shared/lib'
 import { BackdropScene } from '~/widgets/backdrop-scenes/ui/BackdropScene'
-import {
-  BACKDROP_SCENES,
-  PARALLAX_PX,
-  REVEAL_SPAN,
-} from '~/widgets/backdrop-scenes/model/constants'
+import { BACKDROP_SCENES, PARALLAX_PX } from '~/widgets/backdrop-scenes/model/constants'
 
 type SceneState = { reveal: number; drift: number }
 
@@ -28,10 +24,15 @@ onMounted(() => {
       const target = states[index]
       if (!anchor || !target) return
       const rect = anchor.getBoundingClientRect()
+
+      // Reveal tracks how much of the section overlaps the viewport, so a
+      // scene sits at full strength for as long as its section is on screen.
+      const overlap = Math.min(rect.bottom, viewportH) - Math.max(rect.top, 0)
+      const ratio = overlap / Math.min(rect.height, viewportH)
+      target.reveal = clamp(ratio, 0, 1)
+
       const centre = rect.top + rect.height / 2
-      const offset = (centre - viewportH / 2) / viewportH
-      target.reveal = clamp(1 - Math.abs(offset) / REVEAL_SPAN, 0, 1)
-      target.drift = reduced ? 0 : offset * PARALLAX_PX
+      target.drift = reduced ? 0 : ((viewportH / 2 - centre) / viewportH) * PARALLAX_PX
     })
   }
 

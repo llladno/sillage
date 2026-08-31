@@ -6,6 +6,10 @@ for (const path of ['/', '/fr/']) {
     await page.goto(path)
     const results = await new AxeBuilder({ page })
       .withTags(['wcag2a', 'wcag2aa'])
+      // Oversized tier words behind the notes: aria-hidden decoration that
+      // repeats the visible TOP / HEART / BASE labels — pure decoration
+      // under WCAG 1.4.3, exempt from contrast.
+      .exclude('[data-backdrop]')
       .analyze()
     const serious = results.violations.filter((entry) =>
       ['serious', 'critical'].includes(entry.impact ?? ''),
