@@ -7,7 +7,10 @@ export default withNuxt(
   {
     rules: {
       'func-style': ['error', 'expression'],
-      'id-length': ['error', { min: 3, exceptions: ['to', 'as', 'id', 't', '_'] }],
+      'id-length': [
+        'error',
+        { min: 3, properties: 'never', exceptions: ['to', 'as', 'id', 't', '_'] },
+      ],
       'no-magic-numbers': 'off',
       '@typescript-eslint/no-magic-numbers': [
         'warn',
