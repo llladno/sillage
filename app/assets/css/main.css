@@ -16,6 +16,9 @@
   html {
     color-scheme: dark;
     scroll-behavior: smooth;
+    /* `clip` (not `hidden`) kills stray full-bleed / reveal-transform
+       overflow without breaking position: sticky. */
+    overflow-x: clip;
   }
   @media (prefers-reduced-motion: reduce) {
     html {

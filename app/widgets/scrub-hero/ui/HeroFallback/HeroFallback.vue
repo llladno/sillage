@@ -10,15 +10,17 @@ const proseBeats = HERO_BEATS.filter((beat) => !CHROME_BEAT_IDS.includes(beat.id
 </script>
 
 <template>
-  <section class="relative grid min-h-dvh place-items-center overflow-hidden px-6 py-24">
+  <section
+    class="relative grid min-h-dvh place-items-center overflow-hidden bg-black px-6 py-24"
+  >
     <NuxtImg
       src="/hero-poster.webp"
       width="1600"
       height="900"
-      class="absolute inset-0 h-full w-full object-cover opacity-60"
+      class="absolute inset-0 h-full w-full object-cover opacity-35"
       alt=""
     />
-    <div class="absolute inset-0 bg-ground/70" />
+    <div class="absolute inset-0 bg-black/80" />
     <div class="relative text-center">
       <Wordmark as="h1" class="block text-4xl sm:text-6xl" />
       <p class="mt-6 font-display text-lg text-ink-dim">{{ t('hero.concept') }}</p>

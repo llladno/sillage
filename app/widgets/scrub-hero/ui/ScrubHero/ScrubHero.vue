@@ -71,7 +71,9 @@ onBeforeUnmount(() => cleanup?.())
   <HeroFallback v-if="!isCinematic()" />
   <div v-else ref="stage" class="relative" :style="{ height: `${STAGE_SCROLL_VH}vh` }">
     <h1 class="sr-only">{{ t('hero.beats.name') }} — {{ t('hero.concept') }}</h1>
-    <div class="sticky top-0 flex h-dvh items-center justify-center overflow-hidden">
+    <div
+      class="sticky top-0 flex h-dvh items-center justify-center overflow-hidden bg-black"
+    >
       <div
         class="relative aspect-video w-full max-w-[min(84vw,1180px)]"
         :style="{ opacity: canvasOpacity }"
@@ -82,18 +84,14 @@ onBeforeUnmount(() => cleanup?.())
           :settled="settled"
           fit="contain"
         />
-        <!-- edges + base melt into the ground -->
+        <!-- edges + base melt into pure black -->
         <div
           aria-hidden="true"
           class="pointer-events-none absolute inset-0"
           style="
             background:
-              radial-gradient(
-                ellipse 78% 82% at 50% 46%,
-                transparent 55%,
-                var(--color-ground) 92%
-              ),
-              linear-gradient(to bottom, transparent 62%, var(--color-ground) 100%);
+              radial-gradient(ellipse 78% 82% at 50% 46%, transparent 55%, #000 92%),
+              linear-gradient(to bottom, transparent 62%, #000 100%);
           "
         />
       </div>
