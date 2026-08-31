@@ -1,5 +1,4 @@
 export { Wordmark } from '~/shared/ui/Wordmark'
-export { SillageTrail } from '~/shared/ui/SillageTrail'
 export { SectionShell } from '~/shared/ui/SectionShell'
 export type { SectionShellProps } from '~/shared/ui/SectionShell'
 export { ToastStack } from '~/shared/ui/ToastStack'
