@@ -1,16 +1,33 @@
-// One-off: convert the generated source art in docs/content/ + the extracted
-// frame JPGs in /tmp/seq into the web assets under public/.
+// Rebuilds every web asset under public/ from the source art in docs/content/.
+// Needs ffmpeg on PATH for the hero frame extraction.
 // Run: node scripts/process-assets.mjs
-import { mkdirSync, readdirSync } from 'node:fs'
+import { execFileSync } from 'node:child_process'
+import { mkdirSync, mkdtempSync, readdirSync } from 'node:fs'
+import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import sharp from 'sharp'
 
 const SRC = 'docs/content'
-const SEQ_SRC = '/tmp/seq'
+const FRAME_FPS = 20
 
 mkdirSync('public/sequence', { recursive: true })
 mkdirSync('public/object', { recursive: true })
 mkdirSync('public/og', { recursive: true })
+
+// Extract hero frames from the interpolation video into a temp dir.
+const SEQ_SRC = mkdtempSync(join(tmpdir(), 'sillage-seq-'))
+execFileSync('ffmpeg', [
+  '-y',
+  '-v',
+  'error',
+  '-i',
+  `${SRC}/interpolation.mp4`,
+  '-vf',
+  `fps=${FRAME_FPS},scale=1600:-2`,
+  '-q:v',
+  '3',
+  join(SEQ_SRC, 'frame-%04d.jpg'),
+])
 
 const webp = (input, output, width, quality = 82) =>
   sharp(input)
@@ -40,7 +57,7 @@ jobs.push(webp(`${SRC}/object.jpg`, 'public/object.webp', 1200, 84))
 jobs.push(
   sharp(`${SRC}/default.jpg`)
     .resize({ width: 1200, height: 630, fit: 'cover' })
-    .png()
+    .png({ quality: 70, compressionLevel: 9, palette: true })
     .toFile('public/og/default.png'),
 )
 
