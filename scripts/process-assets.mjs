@@ -25,7 +25,7 @@ execFileSync('ffmpeg', [
   '-vf',
   `fps=${FRAME_FPS},scale=1600:-2`,
   '-q:v',
-  '3',
+  '2',
   join(SEQ_SRC, 'frame-%04d.jpg'),
 ])
 
@@ -43,7 +43,7 @@ const frames = readdirSync(SEQ_SRC)
   .sort()
 frames.forEach((name, index) => {
   const seq = String(index + 1).padStart(4, '0')
-  jobs.push(webp(join(SEQ_SRC, name), `public/sequence/frame-${seq}.webp`, 1600, 78))
+  jobs.push(webp(join(SEQ_SRC, name), `public/sequence/frame-${seq}.webp`, 1400, 86))
 })
 console.log(`sequence: ${frames.length} frames`)
 

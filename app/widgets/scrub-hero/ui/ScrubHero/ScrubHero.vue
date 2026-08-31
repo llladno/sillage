@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
-import { useReducedMotion, useScrubFrames } from '~/shared/lib'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
+import { clamp, useReducedMotion, useScrubFrames } from '~/shared/lib'
 import { ScrubCanvas } from '~/widgets/scrub-hero/ui/ScrubCanvas'
 import { HeroBeats } from '~/widgets/scrub-hero/ui/HeroBeats'
 import { HeroFallback } from '~/widgets/scrub-hero/ui/HeroFallback'
@@ -8,6 +8,9 @@ import {
   FRAME_COUNT,
   FRAME_PATH_EXT,
   FRAME_PATH_PREFIX,
+  HERO_FADE_END,
+  HERO_FADE_START,
+  HERO_MIN_OPACITY,
   MOBILE_MAX_WIDTH,
   STAGE_SCROLL_VH,
   USE_PLACEHOLDER,
@@ -28,6 +31,14 @@ const { images, settled } = useScrubFrames({
 })
 
 const isCinematic = () => isMounted.value && !reduced.value && isWide.value
+
+// Full opacity through the run, then dissolves to HERO_MIN_OPACITY as the scrub
+// finishes and the sticky layer scrolls away.
+const canvasOpacity = computed(() => {
+  const span = HERO_FADE_END - HERO_FADE_START
+  const fade = clamp((progress.value - HERO_FADE_START) / span, 0, 1)
+  return 1 - fade * (1 - HERO_MIN_OPACITY)
+})
 
 let cleanup: (() => void) | undefined
 
@@ -60,8 +71,32 @@ onBeforeUnmount(() => cleanup?.())
   <HeroFallback v-if="!isCinematic()" />
   <div v-else ref="stage" class="relative" :style="{ height: `${STAGE_SCROLL_VH}vh` }">
     <h1 class="sr-only">{{ t('hero.beats.name') }} — {{ t('hero.concept') }}</h1>
-    <div class="sticky top-0 h-dvh overflow-hidden">
-      <ScrubCanvas :progress="progress" :images="images" :settled="settled" />
+    <div class="sticky top-0 flex h-dvh items-center justify-center overflow-hidden">
+      <div
+        class="relative aspect-video w-full max-w-[min(84vw,1180px)]"
+        :style="{ opacity: canvasOpacity }"
+      >
+        <ScrubCanvas
+          :progress="progress"
+          :images="images"
+          :settled="settled"
+          fit="contain"
+        />
+        <!-- edges + base melt into the ground -->
+        <div
+          aria-hidden="true"
+          class="pointer-events-none absolute inset-0"
+          style="
+            background:
+              radial-gradient(
+                ellipse 78% 82% at 50% 46%,
+                transparent 55%,
+                var(--color-ground) 92%
+              ),
+              linear-gradient(to bottom, transparent 62%, var(--color-ground) 100%);
+          "
+        />
+      </div>
       <HeroBeats :progress="progress" />
     </div>
   </div>

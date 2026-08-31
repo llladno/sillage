@@ -10,13 +10,19 @@ const ROTATION_TURNS = 1.4
 export const frameIndexFor = (progress: number, count: number): number =>
   Math.round(clamp(progress, 0, 1) * (count - 1))
 
+type FrameFit = 'cover' | 'contain'
+
 export const paintFrame = (
   context: CanvasRenderingContext2D,
   image: HTMLImageElement,
   width: number,
   height: number,
+  fit: FrameFit = 'cover',
 ): void => {
-  const scale = Math.max(width / image.width, height / image.height)
+  const ratio = width / image.width
+  const heightRatio = height / image.height
+  const scale =
+    fit === 'contain' ? Math.min(ratio, heightRatio) : Math.max(ratio, heightRatio)
   const drawWidth = image.width * scale
   const drawHeight = image.height * scale
   context.clearRect(0, 0, width, height)

@@ -7,11 +7,15 @@ import {
   paintPlaceholder,
 } from '~/widgets/scrub-hero/ui/ScrubCanvas/paint'
 
-const props = defineProps<{
-  progress: number
-  images: HTMLImageElement[]
-  settled?: number
-}>()
+const props = withDefaults(
+  defineProps<{
+    progress: number
+    images: HTMLImageElement[]
+    settled?: number
+    fit?: 'cover' | 'contain'
+  }>(),
+  { settled: 0, fit: 'cover' },
+)
 
 const MAX_FRAME_SEARCH = 12
 
@@ -55,7 +59,7 @@ const render = () => {
   currentFrame.value = frame
   const image = bestFrameFor(frame) ?? (isReady(poster) ? poster : undefined)
   if (image) {
-    paintFrame(context, image, clientWidth, clientHeight)
+    paintFrame(context, image, clientWidth, clientHeight, props.fit)
   } else {
     paintPlaceholder(context, props.progress, clientWidth, clientHeight)
   }

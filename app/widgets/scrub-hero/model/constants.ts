@@ -7,6 +7,12 @@ export const STAGE_SCROLL_VH = 320
 export const USE_PLACEHOLDER = false
 export const MOBILE_MAX_WIDTH = 768
 
+// The scrub canvas dissolves into the ground over the tail of the scroll, so the
+// hand-off to the next section is a fade, not a cut.
+export const HERO_FADE_START = 0.8
+export const HERO_FADE_END = 1
+export const HERO_MIN_OPACITY = 0
+
 export const HERO_BEATS: HeroBeat[] = [
   // `name` is not rendered as a visible beat (it is the <h1> and the flacon
   // engraving); kept here for the fallback list and the sr-only heading.
