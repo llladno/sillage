@@ -12,3 +12,10 @@ test('every section is a labelled landmark', async ({ page }) => {
   const sections = page.locator('main section[aria-labelledby]')
   expect(await sections.count()).toBeGreaterThanOrEqual(1)
 })
+
+test('header nav anchors point at real sections', async ({ page }) => {
+  await page.goto('/')
+  for (const id of ['composition', 'story', 'object', 'ritual', 'acquire']) {
+    await expect(page.locator(`#${id}`)).toHaveCount(1)
+  }
+})
