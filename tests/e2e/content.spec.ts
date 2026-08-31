@@ -27,3 +27,11 @@ test('concept line and wordmark are in static HTML', async ({ page }) => {
     page.getByText('The smell of a letter you never sent.').first(),
   ).toBeVisible()
 })
+
+test('story and ritual copy are in static HTML', async ({ page }) => {
+  await page.goto('/')
+  await expect(
+    page.getByText('cold-metal smell of a fountain pen', { exact: false }),
+  ).toBeVisible()
+  await expect(page.getByText('Two sprays on warm skin', { exact: false })).toBeVisible()
+})
