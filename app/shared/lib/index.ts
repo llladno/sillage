@@ -1,1 +1,6 @@
 export { clamp } from '~/shared/lib/clamp'
+export { beatOpacity } from '~/shared/lib/ease'
+export { useReducedMotion } from '~/shared/lib/use-reduced-motion'
+export { useFakeSubmit } from '~/shared/lib/use-fake-submit'
+export { useBag } from '~/shared/lib/use-bag'
+export { frameUrl, useScrubFrames } from '~/shared/lib/use-scrub-frames'
