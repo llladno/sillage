@@ -16,7 +16,6 @@ export const BACKDROP_SCENES: BackdropSceneConfig[] = [
   { anchorId: 'object', src: '/object.webp', side: 'left' },
   { anchorId: 'ritual', src: '/object/fill.webp', side: 'right' },
   { anchorId: 'acquire', src: '/acquire.webp', side: 'left' },
-  { anchorId: 'newsletter', src: '/object/cap.webp', side: 'right' },
 ]
 
 // Opacity of a scene when its section fully occupies the viewport.

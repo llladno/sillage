@@ -3,7 +3,7 @@ import { expect, test } from '@playwright/test'
 test('backdrop scenes are decorative and one per section', async ({ page }) => {
   await page.goto('/')
   const scenes = page.locator('[data-backdrop-scene]')
-  await expect(scenes).toHaveCount(6)
+  await expect(scenes).toHaveCount(5)
   await expect(scenes.first()).toHaveAttribute('aria-hidden', 'true')
 })
 

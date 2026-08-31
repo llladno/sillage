@@ -64,7 +64,7 @@ onBeforeUnmount(() => kill?.())
 
 <template>
   <SectionShell id="ritual" title-key="sections.ritual.title">
-    <div ref="root" class="relative pl-10">
+    <div ref="root" class="relative overflow-x-clip pl-10">
       <span
         data-spine
         aria-hidden="true"
@@ -75,7 +75,7 @@ onBeforeUnmount(() => kill?.())
           <span data-step-num class="font-display text-3xl leading-none text-accent">
             {{ index + 1 }}
           </span>
-          <p class="max-w-md text-lg">{{ t(key) }}</p>
+          <p class="min-w-0 max-w-md text-lg">{{ t(key) }}</p>
         </li>
       </ol>
     </div>
