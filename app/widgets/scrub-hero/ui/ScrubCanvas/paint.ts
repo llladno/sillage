@@ -1,7 +1,7 @@
 import { clamp } from '~/shared/lib'
 
-const CORE_MIN_RADIUS = 0.04
-const CORE_MAX_RADIUS = 0.32
+const CORE_MIN_RADIUS = 0.09
+const CORE_MAX_RADIUS = 0.34
 const BOTTLE_WIDTH_RATIO = 0.16
 const BOTTLE_HEIGHT_RATIO = 0.42
 const BOTTLE_CORNER = 12

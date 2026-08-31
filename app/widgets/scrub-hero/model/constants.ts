@@ -8,7 +8,8 @@ export const USE_PLACEHOLDER = true
 export const MOBILE_MAX_WIDTH = 768
 
 export const HERO_BEATS: HeroBeat[] = [
-  { id: 'name', from: 0.02, to: 0.2, key: 'hero.beats.name' },
+  // `from` below 0 so the first beat is already visible on load (progress 0).
+  { id: 'name', from: -0.12, to: 0.2, key: 'hero.beats.name' },
   { id: 'tagline', from: 0.2, to: 0.42, key: 'hero.beats.tagline' },
   { id: 'edition', from: 0.44, to: 0.62, key: 'hero.beats.edition' },
   { id: 'notesLead', from: 0.64, to: 0.84, key: 'hero.beats.notesLead' },

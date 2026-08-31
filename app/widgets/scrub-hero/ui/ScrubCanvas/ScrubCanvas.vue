@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue'
+import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { FRAME_COUNT } from '~/widgets/scrub-hero/model/constants'
 import {
   frameIndexFor,
@@ -19,6 +19,7 @@ const render = () => {
   if (!context) return
 
   const { clientWidth, clientHeight } = element
+  if (clientWidth === 0 || clientHeight === 0) return
   const ratio = window.devicePixelRatio || 1
   if (element.width !== Math.round(clientWidth * ratio)) {
     element.width = Math.round(clientWidth * ratio)
@@ -36,11 +37,21 @@ const render = () => {
   }
 }
 
-watch(
-  () => props.progress,
-  () => requestAnimationFrame(render),
-)
-onMounted(render)
+const scheduleRender = () => requestAnimationFrame(render)
+
+let observer: ResizeObserver | undefined
+
+watch(() => props.progress, scheduleRender)
+
+onMounted(() => {
+  scheduleRender()
+  if (canvas.value && 'ResizeObserver' in window) {
+    observer = new ResizeObserver(scheduleRender)
+    observer.observe(canvas.value)
+  }
+})
+
+onBeforeUnmount(() => observer?.disconnect())
 </script>
 
 <template>
