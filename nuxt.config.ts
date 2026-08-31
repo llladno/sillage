@@ -8,10 +8,21 @@ export default defineNuxtConfig({
   modules: [
     '@nuxt/eslint',
     '@nuxt/image',
+    '@nuxtjs/i18n',
     '@vueuse/nuxt',
     '@nuxtjs/sitemap',
     '@nuxtjs/robots',
   ],
+
+  i18n: {
+    strategy: 'prefix_except_default',
+    defaultLocale: 'en',
+    baseUrl: process.env.NUXT_PUBLIC_SITE_URL || 'https://sillage.example',
+    locales: [
+      { code: 'en', language: 'en-US', file: 'en.json' },
+      { code: 'fr', language: 'fr-FR', file: 'fr.json' },
+    ],
+  },
 
   css: ['~/assets/css/main.css'],
 

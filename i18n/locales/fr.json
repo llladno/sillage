@@ -1,0 +1,59 @@
+{
+  "nav": {
+    "composition": "Composition",
+    "story": "Histoire",
+    "object": "L’Objet",
+    "ritual": "Rituel",
+    "acquire": "Acquérir"
+  },
+  "sections": {
+    "composition": { "title": "Composition" },
+    "story": { "title": "Histoire" },
+    "object": { "title": "L’Objet" },
+    "ritual": { "title": "Rituel" },
+    "acquire": { "title": "Acquérir" },
+    "newsletter": { "title": "Garder le sillage" }
+  },
+  "hero": {
+    "concept": "L’odeur d’une lettre jamais envoyée.",
+    "beats": {
+      "name": "SILLAGE",
+      "tagline": "La traînée qu’un parfum laisse derrière lui.",
+      "edition": "01 — Encre",
+      "notesLead": "Iris. Thé noir. Encre humide.",
+      "cta": "Acquérir l’édition"
+    }
+  },
+  "composition": { "top": "Tête", "heart": "Cœur", "base": "Fond" },
+  "story": {
+    "body": "Encre est construit autour de l’odeur de métal froid d’un stylo-plume et du papier qu’il n’a jamais touché. Bergamote et poivre rose ouvrent, tranchants ; iris et thé noir s’installent dans le non-dit ; vétiver, papyrus et encens sont le tiroir que l’on a refermé.",
+    "perfumer": "Composé par un nez indépendant à Grasse, 2026."
+  },
+  "object": {
+    "body": "Un flacon rectangulaire lourd en verre transparent, 50 ml, bouchon noir mat, marque en creux. Rempli et scellé à la main en petites séries."
+  },
+  "ritual": {
+    "step1": "Deux vaporisations sur peau chaude — l’intérieur du poignet, la base de la gorge.",
+    "step2": "Ne pas frotter. Laisser les notes de tête s’éteindre seules.",
+    "step3": "À porter le soir, ou quand on veut que la pièce pose la question."
+  },
+  "acquire": {
+    "sizeLabel": "Contenance",
+    "add": "Ajouter au panier",
+    "added": "Ajouté — SILLAGE 01, {size}",
+    "bag": "Panier ({count})"
+  },
+  "newsletter": {
+    "body": "Une lettre par saison. Pas davantage.",
+    "emailLabel": "E-mail",
+    "placeholder": "vous@exemple.com",
+    "submit": "Rejoindre",
+    "invalid": "Saisissez une adresse e-mail valide.",
+    "success": "Vous êtes sur la liste."
+  },
+  "meta": {
+    "title": "SILLAGE 01 — Encre",
+    "description": "L’odeur d’une lettre jamais envoyée. Un eau de parfum indépendant, décanté à la main en 50 ml."
+  },
+  "footer": { "disclaimer": "SILLAGE — un projet fictif. Aucun produit n’est à vendre." }
+}

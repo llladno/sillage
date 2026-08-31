@@ -1,0 +1,59 @@
+{
+  "nav": {
+    "composition": "Composition",
+    "story": "Story",
+    "object": "The Object",
+    "ritual": "Ritual",
+    "acquire": "Acquire"
+  },
+  "sections": {
+    "composition": { "title": "Composition" },
+    "story": { "title": "Story" },
+    "object": { "title": "The Object" },
+    "ritual": { "title": "Ritual" },
+    "acquire": { "title": "Acquire" },
+    "newsletter": { "title": "Stay on the trail" }
+  },
+  "hero": {
+    "concept": "The smell of a letter you never sent.",
+    "beats": {
+      "name": "SILLAGE",
+      "tagline": "The trail a scent leaves behind.",
+      "edition": "01 — Encre",
+      "notesLead": "Iris. Black tea. Wet ink.",
+      "cta": "Acquire the edition"
+    }
+  },
+  "composition": { "top": "Top", "heart": "Heart", "base": "Base" },
+  "story": {
+    "body": "Encre is built around the cold-metal smell of a fountain pen and the paper it never touched. Bergamot and pink pepper open sharp; iris and black tea settle into something unsaid; vetiver, papyrus and incense are the drawer you closed.",
+    "perfumer": "Composed by an independent nose in Grasse, 2026."
+  },
+  "object": {
+    "body": "A heavy rectangular flacon in clear glass, 50 ml, matte-black cap, debossed mark. Filled and sealed by hand in small batches."
+  },
+  "ritual": {
+    "step1": "Two sprays on warm skin — the inside of the wrist, the base of the throat.",
+    "step2": "Do not rub. Let the top notes burn off on their own.",
+    "step3": "Wear it in the evening, or when you want the room to ask."
+  },
+  "acquire": {
+    "sizeLabel": "Size",
+    "add": "Add to bag",
+    "added": "Added — SILLAGE 01, {size}",
+    "bag": "Bag ({count})"
+  },
+  "newsletter": {
+    "body": "One letter a season. No more than that.",
+    "emailLabel": "Email",
+    "placeholder": "you@example.com",
+    "submit": "Join",
+    "invalid": "Enter a valid email address.",
+    "success": "You’re on the list."
+  },
+  "meta": {
+    "title": "SILLAGE 01 — Encre",
+    "description": "The smell of a letter you never sent. An independent eau de parfum, hand-decanted in 50 ml."
+  },
+  "footer": { "disclaimer": "SILLAGE — a fictional project. No products are for sale." }
+}
