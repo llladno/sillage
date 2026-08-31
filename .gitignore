@@ -1,11 +1,31 @@
-node_modules
-.nuxt
+# Nuxt dev/build outputs
 .output
-dist
 .data
+.nuxt
+.nitro
+.cache
+dist
+
+# Node dependencies
+node_modules
+
+# Logs
+logs
 *.log
+
+# Misc
 .DS_Store
-.env
+.fleet
+.idea
+
+# Test artifacts
 test-results
 playwright-report
+
+# Claude
 .claude/settings.local.json
+
+# Local env files
+.env
+.env.*
+!.env.example

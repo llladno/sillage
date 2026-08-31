@@ -1,0 +1,9 @@
+packages: []
+allowBuilds:
+  esbuild: true
+  lefthook: true
+  unrs-resolver: true
+  sharp: true
+  '@parcel/watcher': true
+overrides:
+  typescript: 5.9.3
