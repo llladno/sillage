@@ -29,6 +29,7 @@ export default withNuxt(
     rules: {
       'no-restricted-imports': ['error', { patterns: ['../*', './*'] }],
       'vue/multi-word-component-names': 'off',
+      'vue/html-self-closing': 'off',
     },
   },
   {

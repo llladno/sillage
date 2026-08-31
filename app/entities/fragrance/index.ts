@@ -1,3 +1,5 @@
 export type { Fragrance, NoteTier, Size, SizeId } from '~/entities/fragrance/model/types'
 export { getFragrance } from '~/entities/fragrance/model/data'
 export { NoteList } from '~/entities/fragrance/ui/NoteList'
+export { SizeSelect } from '~/entities/fragrance/ui/SizeSelect'
+export { PriceTag } from '~/entities/fragrance/ui/PriceTag'
