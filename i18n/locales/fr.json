@@ -46,7 +46,7 @@
   "newsletter": {
     "body": "Une lettre par saison. Pas davantage.",
     "emailLabel": "E-mail",
-    "placeholder": "vous@exemple.com",
+    "placeholder": "vous{'@'}exemple.com",
     "submit": "Rejoindre",
     "invalid": "Saisissez une adresse e-mail valide.",
     "success": "Vous êtes sur la liste."

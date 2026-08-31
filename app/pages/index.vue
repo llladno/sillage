@@ -5,6 +5,7 @@ import { StorySection } from '~/widgets/story'
 import { ObjectSection } from '~/widgets/object'
 import { RitualSection } from '~/widgets/ritual'
 import { AcquireSection } from '~/widgets/acquire'
+import { NewsletterSection } from '~/widgets/newsletter'
 </script>
 
 <template>
@@ -15,5 +16,6 @@ import { AcquireSection } from '~/widgets/acquire'
     <ObjectSection />
     <RitualSection />
     <AcquireSection />
+    <NewsletterSection />
   </div>
 </template>

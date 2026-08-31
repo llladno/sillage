@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { getFragrance } from '~/entities/fragrance'
+import { getFragrance } from '~/entities/fragrance/model/data'
 
 describe('getFragrance', () => {
   it('returns 3 tiers with the fixed EN notes', () => {
