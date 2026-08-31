@@ -4,37 +4,70 @@ import { clamp } from '~/shared/lib'
 import {
   ALPHA_MAX,
   ALPHA_MIN,
-  AMBER_RATIO,
-  AMBER_RGB,
-  CREAM_RGB,
-  DRIFT_MAX,
-  DRIFT_MIN,
-  GLOW_SCALE,
+  BASE_FALL,
+  DEPTH_FLOOR,
+  FIELD_ANGLE_RANGE,
+  FLOW_DRIFT,
+  FLOW_SCROLL_GAIN,
+  GLOW_CORE_ALPHA,
+  GLOW_MID_ALPHA,
+  GLOW_MID_STOP,
+  HASH_MAX,
+  HASH_MIX,
+  HASH_PRIME_X,
+  HASH_PRIME_Y,
+  HASH_SHIFT_A,
+  HASH_SHIFT_B,
+  NOISE_MIDPOINT,
+  NOISE_SCALE,
   PARTICLE_COUNT,
-  RADIUS_MAX,
-  RADIUS_MIN,
   SCROLL_COUPLING,
-  SCROLL_DEPTH_FLOOR,
   SCROLL_VELOCITY_DECAY,
+  SIZE_MAX,
+  SIZE_MIN,
   SPAWN_MARGIN,
-  SWAY_AMPLITUDE,
-  SWAY_SPEED,
+  SPEED_MAX,
+  SPEED_MIN,
+  SPRITE_SIZE,
+  TONE_RGB,
 } from '~/shared/ui/ScentField/constants'
 
-type Particle = {
+type Mote = {
   x: number
   y: number
-  radius: number
-  drift: number
+  speed: number
+  size: number
   alpha: number
-  phase: number
-  amber: boolean
+  tone: number
 }
 
 const canvas = ref<HTMLCanvasElement | null>(null)
 const opacity = ref(0)
 
 const between = (min: number, max: number) => min + Math.random() * (max - min)
+
+const hashCell = (xCell: number, yCell: number) => {
+  const blended = xCell * HASH_PRIME_X + yCell * HASH_PRIME_Y
+  const churned = (blended ^ (blended >>> HASH_SHIFT_A)) * HASH_MIX
+  return ((churned ^ (churned >>> HASH_SHIFT_B)) >>> 0) / HASH_MAX
+}
+
+const easeCell = (fraction: number) => fraction * fraction * (3 - 2 * fraction)
+
+// Value-noise flow field — organic streams without a noise library.
+const flowNoise = (xCoord: number, yCoord: number) => {
+  const xBase = Math.floor(xCoord)
+  const yBase = Math.floor(yCoord)
+  const xFraction = easeCell(xCoord - xBase)
+  const yFraction = easeCell(yCoord - yBase)
+  const cornerTopLeft = hashCell(xBase, yBase)
+  const cornerTopRight = hashCell(xBase + 1, yBase)
+  const cornerLowLeft = hashCell(xBase, yBase + 1)
+  const cornerLowRight = hashCell(xBase + 1, yBase + 1)
+  const edgeTop = cornerTopLeft + (cornerTopRight - cornerTopLeft) * xFraction
+  const edgeLow = cornerLowLeft + (cornerLowRight - cornerLowLeft) * xFraction
+  return edgeTop + (edgeLow - edgeTop) * yFraction
+}
 
 let cleanup: (() => void) | undefined
 
@@ -48,18 +81,37 @@ onMounted(() => {
   let width = 0
   let height = 0
   let frame = 0
-  const particles: Particle[] = []
+  let flowOffset = 0
+  let lastScrollY = window.scrollY
+  let scrollVelocity = 0
+  const motes: Mote[] = []
+
+  const sprites = TONE_RGB.map((rgb) => {
+    const sprite = document.createElement('canvas')
+    sprite.width = SPRITE_SIZE
+    sprite.height = SPRITE_SIZE
+    const paint = sprite.getContext('2d')
+    if (paint) {
+      const middle = SPRITE_SIZE / 2
+      const glow = paint.createRadialGradient(middle, middle, 0, middle, middle, middle)
+      glow.addColorStop(0, `rgba(${rgb}, ${GLOW_CORE_ALPHA})`)
+      glow.addColorStop(GLOW_MID_STOP, `rgba(${rgb}, ${GLOW_MID_ALPHA})`)
+      glow.addColorStop(1, `rgba(${rgb}, 0)`)
+      paint.fillStyle = glow
+      paint.fillRect(0, 0, SPRITE_SIZE, SPRITE_SIZE)
+    }
+    return sprite
+  })
 
   const seed = () => {
     for (let index = 0; index < PARTICLE_COUNT; index += 1) {
-      particles.push({
+      motes.push({
         x: Math.random() * width,
         y: Math.random() * height,
-        radius: between(RADIUS_MIN, RADIUS_MAX),
-        drift: between(DRIFT_MIN, DRIFT_MAX),
+        speed: between(SPEED_MIN, SPEED_MAX),
+        size: between(SIZE_MIN, SIZE_MAX),
         alpha: between(ALPHA_MIN, ALPHA_MAX),
-        phase: Math.random() * Math.PI * 2,
-        amber: Math.random() < AMBER_RATIO,
+        tone: Math.floor(Math.random() * sprites.length),
       })
     }
   }
@@ -71,7 +123,7 @@ onMounted(() => {
     element.width = width * ratio
     element.height = height * ratio
     context.setTransform(ratio, 0, 0, ratio, 0, 0)
-    if (particles.length === 0) seed()
+    if (motes.length === 0) seed()
   }
 
   // Fade in as the first section reaches the viewport — the hero stays clean.
@@ -82,16 +134,15 @@ onMounted(() => {
     opacity.value = clamp(1 - top / window.innerHeight, 0, 1)
   }
 
-  let lastScrollY = window.scrollY
-  let scrollVelocity = 0
   const onScroll = () => {
     scrollVelocity += window.scrollY - lastScrollY
     lastScrollY = window.scrollY
     updateGate()
   }
 
-  const step = (time: number) => {
+  const step = () => {
     scrollVelocity *= SCROLL_VELOCITY_DECAY
+    flowOffset += FLOW_DRIFT + Math.abs(scrollVelocity) * FLOW_SCROLL_GAIN
 
     // Idle cheaply while the field is invisible (through the whole hero).
     if (opacity.value === 0) {
@@ -100,39 +151,38 @@ onMounted(() => {
     }
 
     context.clearRect(0, 0, width, height)
-    const fall = scrollVelocity * SCROLL_COUPLING
+    context.globalCompositeOperation = 'lighter'
+    const pull = scrollVelocity * SCROLL_COUPLING
 
-    for (const particle of particles) {
-      const depth = particle.radius / RADIUS_MAX + SCROLL_DEPTH_FLOOR
-      particle.y += particle.drift + fall * depth
-      if (particle.y > height + SPAWN_MARGIN) {
-        particle.y = -SPAWN_MARGIN
-        particle.x = Math.random() * width
-      } else if (particle.y < -SPAWN_MARGIN) {
-        particle.y = height + SPAWN_MARGIN
-        particle.x = Math.random() * width
+    for (const mote of motes) {
+      const depth = mote.size / SIZE_MAX + DEPTH_FLOOR
+      const field = flowNoise(mote.x * NOISE_SCALE, mote.y * NOISE_SCALE + flowOffset)
+      const angle = (field - NOISE_MIDPOINT) * FIELD_ANGLE_RANGE
+      mote.x += Math.sin(angle) * mote.speed
+      mote.y += Math.cos(angle) * mote.speed + (BASE_FALL + pull) * depth
+
+      if (mote.y > height + SPAWN_MARGIN) {
+        mote.y = -SPAWN_MARGIN
+        mote.x = Math.random() * width
+      } else if (mote.y < -SPAWN_MARGIN) {
+        mote.y = height + SPAWN_MARGIN
+        mote.x = Math.random() * width
       }
+      if (mote.x > width + SPAWN_MARGIN) mote.x = -SPAWN_MARGIN
+      else if (mote.x < -SPAWN_MARGIN) mote.x = width + SPAWN_MARGIN
 
-      const drawX =
-        particle.x + Math.sin(time * SWAY_SPEED + particle.phase) * SWAY_AMPLITUDE
-      const reach = particle.radius * GLOW_SCALE
-      const rgb = particle.amber ? AMBER_RGB : CREAM_RGB
-      const glow = context.createRadialGradient(
-        drawX,
-        particle.y,
-        0,
-        drawX,
-        particle.y,
-        reach,
+      context.globalAlpha = mote.alpha
+      context.drawImage(
+        sprites[mote.tone] ?? sprites[0]!,
+        mote.x - mote.size / 2,
+        mote.y - mote.size / 2,
+        mote.size,
+        mote.size,
       )
-      glow.addColorStop(0, `rgba(${rgb}, ${particle.alpha})`)
-      glow.addColorStop(1, `rgba(${rgb}, 0)`)
-      context.fillStyle = glow
-      context.beginPath()
-      context.arc(drawX, particle.y, reach, 0, Math.PI * 2)
-      context.fill()
     }
 
+    context.globalAlpha = 1
+    context.globalCompositeOperation = 'source-over'
     frame = requestAnimationFrame(step)
   }
 
