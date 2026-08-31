@@ -12,5 +12,6 @@ export const HERO_BEATS: HeroBeat[] = [
   { id: 'tagline', from: 0.2, to: 0.42, key: 'hero.beats.tagline' },
   { id: 'edition', from: 0.44, to: 0.62, key: 'hero.beats.edition' },
   { id: 'notesLead', from: 0.64, to: 0.84, key: 'hero.beats.notesLead' },
-  { id: 'cta', from: 0.86, to: 1, key: 'hero.beats.cta' },
+  // `to` past 1 so the final beat never fades back out at the end of the scrub.
+  { id: 'cta', from: 0.86, to: 1.15, key: 'hero.beats.cta' },
 ]

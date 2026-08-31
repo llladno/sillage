@@ -21,6 +21,7 @@ const styleFor = (from: number, to: number) => {
     <p
       v-for="beat in HERO_BEATS"
       :key="beat.id"
+      :data-beat="beat.id"
       class="absolute px-6 font-display text-2xl text-ink sm:text-4xl"
       :style="styleFor(beat.from, beat.to)"
     >
