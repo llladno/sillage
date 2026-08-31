@@ -91,9 +91,16 @@ onMounted(() => {
   }
 
   const step = (time: number) => {
+    scrollVelocity *= SCROLL_VELOCITY_DECAY
+
+    // Idle cheaply while the field is invisible (through the whole hero).
+    if (opacity.value === 0) {
+      frame = requestAnimationFrame(step)
+      return
+    }
+
     context.clearRect(0, 0, width, height)
     const fall = scrollVelocity * SCROLL_COUPLING
-    scrollVelocity *= SCROLL_VELOCITY_DECAY
 
     for (const particle of particles) {
       const depth = particle.radius / RADIUS_MAX + SCROLL_DEPTH_FLOOR
