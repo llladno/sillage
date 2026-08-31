@@ -1,13 +1,11 @@
 <script setup lang="ts">
 import { ScrubHero } from '~/widgets/scrub-hero'
-import { SectionShell } from '~/shared/ui'
+import { CompositionPyramid } from '~/widgets/composition'
 </script>
 
 <template>
   <div>
     <ScrubHero />
-    <SectionShell id="composition" title-key="sections.composition.title">
-      <p class="text-ink-dim">Placeholder — replaced in Task 10.</p>
-    </SectionShell>
+    <CompositionPyramid />
   </div>
 </template>
