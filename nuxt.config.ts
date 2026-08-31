@@ -39,6 +39,9 @@ export default defineNuxtConfig({
     url: process.env.NUXT_PUBLIC_SITE_URL || 'https://sillage.example',
   },
 
+  sitemap: { autoLastmod: true },
+  robots: { sitemap: '/sitemap_index.xml' },
+
   app: {
     head: {
       htmlAttrs: { lang: 'en' },
