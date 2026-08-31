@@ -1,4 +1,5 @@
 export { Wordmark } from '~/shared/ui/Wordmark'
+export { ScentField } from '~/shared/ui/ScentField'
 export { SectionShell } from '~/shared/ui/SectionShell'
 export type { SectionShellProps } from '~/shared/ui/SectionShell'
 export { ToastStack } from '~/shared/ui/ToastStack'

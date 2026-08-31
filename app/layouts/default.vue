@@ -1,12 +1,15 @@
 <script setup lang="ts">
-import { ToastStack } from '~/shared/ui'
+import { ScentField, ToastStack } from '~/shared/ui'
 import { SiteFooter, SiteHeader } from '~/widgets/site-chrome'
 </script>
 
 <template>
-  <div class="min-h-dvh bg-ground text-ink">
+  <div class="relative min-h-dvh bg-ground text-ink">
+    <ClientOnly>
+      <ScentField />
+    </ClientOnly>
     <SiteHeader />
-    <main><slot /></main>
+    <main class="relative z-10"><slot /></main>
     <SiteFooter />
     <ToastStack />
   </div>
