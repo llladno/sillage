@@ -255,3 +255,173 @@ frame-0120.webp`, replace `public/hero-poster.webp` with frame 1, then set
   `#0A0908`, so the render's black must match or the frame will "float".
 - **Grain:** add it at the end, lightly, uniformly — it hides WebP banding on
   the large black areas.
+
+---
+
+# Optional — richer imagery
+
+The build ships with only assets 1–5. Everything below is opt-in: it makes the
+site more photographic at the cost of small code changes (noted per item). The
+same house style / flacon lock / lighting lock / camera lock apply.
+
+## 6 · `public/favicon` — the monogram
+
+Replace the default Nuxt favicon. Best made as **vector** from the wordmark, but
+if generating a raster source: render at **512 × 512**, export
+`favicon.ico` (16/32/48) + `favicon.svg` + `apple-touch-icon.png` (180×180).
+
+```
+A minimal fragrance-house monogram on a near-black square (#0A0908). A single
+high-contrast serif capital "S" in warm cream (#F2EBE3), Didone / Fraunces
+character, generous weight contrast, optically centred, small tail of the S
+extending into a fine tapering wisp that curls to the right — a scent trail.
+Flat, no gradient, no bevel, no 3D, crisp edges, reads at 16 pixels. Luxury
+editorial mark, restrained.
+```
+
+**Negative:** `photo, realism, gradient, drop shadow, 3D, bevel, emboss,
+multiple letters, full word, clutter, thin hairlines that vanish when small,
+bright colours`
+
+Code: drop the files in `public/`, add the `<link rel="icon">` set to
+`nuxt.config.ts` `app.head.link`.
+
+## 7 · Object slider — four panel macros
+
+Turns the desktop `<CraftPanel>` (currently a CSS silhouette) into four macro
+studies, one per panel. Aspect **3:4**, render **1800 × 2400** each, export
+WebP ~1200 px wide. Same black ground, same grade.
+
+Code: add `imageKey?: string` to `CraftPanel` props and an `<NuxtImg>` per panel
+in `ObjectSection.vue`; files `public/object/glass.webp` … `batch.webp`.
+
+**7a — glass**
+
+```
+Extreme macro, ultra photorealistic, 8K, pure black background (#0A0908). The
+chamfered vertical edge of a thick block of optical crystal filling the frame
+diagonally; you can see straight into the glass — internal reflections, a bright
+caustic streak, the ink-amber liquid pooled behind the near wall, its meniscus
+catching a cream highlight. Gridded softbox key from upper-left, cold strip rim
+on the edge, warm bounce from below. Razor-sharp on the front edge, deep
+fall-off into black. Rich un-crushed blacks, warm cream highlights (#F2EBE3),
+burnt amber (#C8641E) in the liquid, fine film grain, no HDR. Aspect ratio 3:4.
+```
+
+**7b — cap**
+
+```
+Extreme macro, ultra photorealistic, 8K, pure black background (#0A0908). A slim
+matte-black anodised-aluminium perfume cap seen three-quarter from above, its
+fine knurled band raking the light into a row of tiny cream specular dashes; the
+matte top face almost swallowing the light, one soft reflection of the softbox.
+The cap rests on the same black surface with a faint contact shadow. Gridded
+softbox key upper-left, cold rim right. Tack-sharp on the knurling, background
+pure black. Low key, rich blacks, warm cream highlights, minimal, expensive.
+Aspect ratio 3:4.
+```
+
+**7c — fill**
+
+```
+Extreme macro, ultra photorealistic, 8K, pure black background (#0A0908).
+Looking through the front wall of the crystal flacon at the liquid inside: a
+translucent ink-amber fluid, the surface meniscus curving up the glass, a slow
+swirl suspended in it like diluted ink, backlit by a warm amber bounce so the
+liquid glows from within (#C8641E) while the glass edges stay cool. A few
+minuscule bubbles clinging to the inner wall. Shallow depth of field, the swirl
+sharp, the far side melting into black. Fine film grain, no HDR, editorial.
+Aspect ratio 3:4.
+```
+
+**7d — batch**
+
+```
+Extreme macro, ultra photorealistic, 8K, pure black background (#0A0908). The
+frosted underside of the flacon's thick bevelled base, raked by a low grazing
+light so a line of debossed serif type — "SILLAGE 01" above a small batch number
+like "N° 0042" — casts fine shadows and reads by relief alone, no ink. The
+frosted glass scatters the light into a soft cream glow at the edges, the centre
+falling to near-black. Tactile, precise, hand-finished. Grazing key light from
+the left, everything else black. Aspect ratio 3:4.
+```
+
+**Negative (all four):** `full bottle in frame, label, sticker, box, hands,
+people, studio visible, horizon, blue cast, plastic, cheap CGI, blown
+highlights, crushed blacks, HDR, oversharpened, printed ink text, colour print`
+
+## 8 · `public/acquire.webp` — product shot for the buy block
+
+A clean hero of the flacon beside the Acquire controls. More "catalogue" than
+the hero frames but still black-ground editorial. Aspect **4:5**, render
+**2048 × 2560**.
+
+Code: add an `<NuxtImg>` column to `AcquireSection.vue` (grid: image | controls).
+
+```
+Cinematic product photograph, ultra photorealistic, 8K, pure black background
+(#0A0908). The heavy rectangular crystal flacon standing upright, dead centre,
+cap on, filled with ink-amber liquid, small debossed serif "SILLAGE" on the
+front glass; the slim matte-black knurled cap catching one clean cream
+highlight. Gridded softbox key from the upper-left, cold vertical strip rim down
+the right edge of the glass, warm amber bounce lighting the liquid from within
+(#C8641E); one soft caustic pooled on the invisible floor, a faint mirror
+reflection of the flacon on the black surface below it. Medium-format, 120mm
+macro at f/8, focus-stacked, tack-sharp, zero distortion, generous black space
+above and below. Rich un-crushed blacks, warm cream highlights (#F2EBE3), fine
+35mm grain, no HDR, restrained and expensive. Aspect ratio 4:5.
+```
+
+**Negative:** `label, box, packaging, dropper, spray trigger, hands, people,
+props, flowers, fabric, bright background, colour cast, HDR, oversharpened,
+cheap CGI, floating text, watermark`
+
+## 9 · `public/story.webp` — atmosphere for the Story section (optional)
+
+Only add if the section feels too bare — it competes with the typography, so
+keep it dark and abstract. Aspect **16:9** or **3:2**, render **3000 px** wide.
+
+Code: absolutely-positioned `<NuxtImg>` behind `[data-body]` at ~25% opacity in
+`StorySection.vue`, or a right-hand column.
+
+```
+Cinematic still-life, ultra photorealistic, 8K, near-black background (#0A0908).
+A single sheet of heavy cream cotton paper (#F2EBE3), unfolded, one soft crease,
+lying on a black surface; a fine fountain-pen nib resting on it, and a single
+bloom of black ink soaking into the fibres at one corner, its edge feathering.
+A shaft of warm low light (#C8641E tint) rakes across from the left, most of the
+frame in shadow, deep negative space. Shallow depth of field, the nib sharp, the
+ink bloom sharp, the rest falling to black. Fine grain, no HDR, melancholic,
+editorial, quiet — "the smell of a letter you never sent". Aspect ratio 16:9.
+```
+
+**Negative:** `handwriting, legible words, full letter of text, envelope with
+address, hands, people, bright scene, warm wood table, rustic props, HDR,
+oversharpened, cheap CGI, colour cast`
+
+## 10 · Background grain / paper texture (optional)
+
+A seamless overlay to sit under every section at very low opacity — kills WebP
+banding on the big black fields and adds a printed-matter feel. Render a
+**2048 × 2048 seamless tile**, export a small PNG.
+
+```
+A seamless tileable texture: extremely fine warm-grey photographic grain and
+faint uncoated-paper fibre over a near-black field (#0A0908), very low contrast,
+no visible features, no pattern, no vignette, evenly lit, edges tiling
+perfectly. Looks like 35mm film grain plus mezzotint. Subtle.
+```
+
+**Negative:** `visible pattern, repeating motif, vignette, gradient, large
+blotches, colour, high contrast, watermark, seams`
+
+Code: `body::before { background-image: url(...); opacity: .04; mix-blend-mode:
+overlay; position: fixed; inset: 0; pointer-events: none; }` in `main.css`.
+
+## Priority if you only do a few
+
+1. **favicon** (#6) — it's currently the stock Nuxt icon, that's the one real gap.
+2. **Object panel macros** (#7) — biggest visual upgrade, makes the signature
+   slider feel like a campaign.
+3. **acquire.webp** (#8) — expected for a premium fragrance buy block.
+4. #9 and #10 are polish; skip unless the page feels thin.
