@@ -6,7 +6,7 @@ import { CraftPanel } from '~/widgets/object/ui/CraftPanel'
 import {
   OBJECT_MOBILE_MAX_WIDTH,
   PANEL_IDS,
-  SILHOUETTE_PARALLAX,
+  PANEL_IMAGE_PARALLAX,
   SLIDER_SCROLL_VH,
 } from '~/widgets/object/model/constants'
 
@@ -54,8 +54,9 @@ onMounted(async () => {
         },
       },
     })
-    gsap.to('[data-silhouette]', {
-      x: () => -distance() * SILHOUETTE_PARALLAX,
+    // Each panel's image drifts within its frame → parallax depth as it passes.
+    gsap.to('[data-panel-image]', {
+      yPercent: PANEL_IMAGE_PARALLAX,
       ease: 'none',
       scrollTrigger: shared,
     })
@@ -78,6 +79,7 @@ onBeforeUnmount(() => kill?.())
         :id="panelId"
         :key="panelId"
         :index="index"
+        class="mx-auto max-w-sm"
       />
     </div>
 
@@ -91,20 +93,15 @@ onBeforeUnmount(() => kill?.())
     >
       <div class="sticky top-0 flex h-dvh items-center overflow-hidden">
         <div
-          data-silhouette
-          aria-hidden="true"
-          class="pointer-events-none absolute right-[10%] top-1/2 h-[44vh] w-[13vh] -translate-y-1/2 rounded-[16px] border border-line bg-gradient-to-b from-ink/10 to-ink/[0.02] shadow-[0_0_140px_50px_rgba(200,100,30,0.14)]"
-        />
-        <div
           ref="track"
-          class="flex items-center gap-[10vw] pl-[8vw] pr-[50vw] will-change-transform"
+          class="flex items-center gap-[8vw] pl-[10vw] pr-[55vw] will-change-transform"
         >
           <CraftPanel
             v-for="(panelId, index) in PANEL_IDS"
             :id="panelId"
             :key="panelId"
             :index="index"
-            class="w-[68vw] shrink-0 sm:w-[30vw]"
+            class="w-[62vw] shrink-0 sm:w-[24vw]"
           />
         </div>
       </div>

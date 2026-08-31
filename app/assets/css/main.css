@@ -28,6 +28,19 @@
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
   }
+  /* Fine grain over the large black fields — kills WebP banding, adds a
+     printed-matter feel. */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    pointer-events: none;
+    background-image: url('/paper-texture.webp');
+    background-size: 480px;
+    opacity: 0.05;
+    mix-blend-mode: overlay;
+  }
   :focus-visible {
     outline: 2px solid var(--color-accent);
     outline-offset: 2px;

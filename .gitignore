@@ -25,6 +25,10 @@ playwright-report
 # Claude
 .claude/settings.local.json
 
+# Heavy source media — regenerate public/sequence/ from this with
+# scripts/process-assets.mjs; keep the file locally, out of git history.
+docs/content/*.mp4
+
 # Local env files
 .env
 .env.*

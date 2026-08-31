@@ -20,7 +20,7 @@ const isWide = ref(false)
 const progress = ref(0)
 const stage = ref<HTMLElement | null>(null)
 
-const { images } = useScrubFrames({
+const { images, settled } = useScrubFrames({
   prefix: FRAME_PATH_PREFIX,
   count: FRAME_COUNT,
   ext: FRAME_PATH_EXT,
@@ -61,7 +61,7 @@ onBeforeUnmount(() => cleanup?.())
   <div v-else ref="stage" class="relative" :style="{ height: `${STAGE_SCROLL_VH}vh` }">
     <h1 class="sr-only">{{ t('hero.beats.name') }} — {{ t('hero.concept') }}</h1>
     <div class="sticky top-0 h-dvh overflow-hidden">
-      <ScrubCanvas :progress="progress" :images="images" />
+      <ScrubCanvas :progress="progress" :images="images" :settled="settled" />
       <HeroBeats :progress="progress" />
     </div>
   </div>

@@ -69,27 +69,42 @@ onBeforeUnmount(() => kill?.())
 
 <template>
   <SectionShell id="acquire" title-key="sections.acquire.title">
-    <div ref="root">
-      <div data-acquire-row>
-        <SizeSelect
-          v-model="selected"
-          :sizes="fragrance.sizes"
-          :label="t('acquire.sizeLabel')"
+    <div
+      ref="root"
+      class="grid gap-10 sm:grid-cols-[minmax(0,22rem)_1fr] sm:items-center"
+    >
+      <div data-acquire-row class="panel overflow-hidden rounded-panel">
+        <NuxtImg
+          src="/acquire.webp"
+          width="1000"
+          height="1250"
+          loading="lazy"
+          class="aspect-[4/5] w-full object-cover"
+          :alt="`${fragrance.edition} — ${fragrance.name}`"
         />
       </div>
-      <div
-        data-acquire-row
-        class="mt-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-8"
-      >
-        <PriceTag :price="shownPrice" />
-        <button
-          type="button"
-          class="rounded-pill bg-accent px-6 py-3 text-sm text-ground disabled:opacity-50"
-          :disabled="pending"
-          @click="addToBag"
+      <div>
+        <div data-acquire-row>
+          <SizeSelect
+            v-model="selected"
+            :sizes="fragrance.sizes"
+            :label="t('acquire.sizeLabel')"
+          />
+        </div>
+        <div
+          data-acquire-row
+          class="mt-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-8"
         >
-          {{ t('acquire.add') }}
-        </button>
+          <PriceTag :price="shownPrice" />
+          <button
+            type="button"
+            class="rounded-pill bg-accent px-6 py-3 text-sm text-ground disabled:opacity-50"
+            :disabled="pending"
+            @click="addToBag"
+          >
+            {{ t('acquire.add') }}
+          </button>
+        </div>
       </div>
     </div>
   </SectionShell>

@@ -48,6 +48,14 @@ onMounted(async () => {
       ease: 'power3.out',
       scrollTrigger: { trigger: '[data-body]', start: BODY_START },
     })
+
+    gsap.from('[data-story-image]', {
+      opacity: 0,
+      scale: 1.08,
+      duration: 1.1,
+      ease: 'power2.out',
+      scrollTrigger: { trigger: '[data-story-image]', start: 'top 85%' },
+    })
   }, element)
 
   ScrollTrigger.refresh()
@@ -59,14 +67,29 @@ onBeforeUnmount(() => kill?.())
 
 <template>
   <SectionShell id="story" title-key="sections.story.title">
-    <div ref="root">
-      <p data-lead class="max-w-prose font-display text-3xl leading-tight text-ink">
-        {{ concept }}
-      </p>
-      <p data-body class="mt-10 max-w-prose text-lg leading-relaxed">
-        {{ t('story.body') }}
-      </p>
-      <p class="mt-6 text-sm text-ink-dim">{{ t('story.perfumer') }}</p>
+    <div
+      ref="root"
+      class="grid gap-12 sm:grid-cols-[1fr_minmax(0,24rem)] sm:items-center"
+    >
+      <div>
+        <p data-lead class="max-w-prose font-display text-3xl leading-tight text-ink">
+          {{ concept }}
+        </p>
+        <p data-body class="mt-10 max-w-prose text-lg leading-relaxed">
+          {{ t('story.body') }}
+        </p>
+        <p class="mt-6 text-sm text-ink-dim">{{ t('story.perfumer') }}</p>
+      </div>
+      <div data-story-image class="panel overflow-hidden rounded-panel">
+        <NuxtImg
+          src="/story.webp"
+          width="1200"
+          height="800"
+          loading="lazy"
+          class="aspect-[3/2] w-full object-cover"
+          alt=""
+        />
+      </div>
     </div>
   </SectionShell>
 </template>

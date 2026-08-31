@@ -6,5 +6,5 @@ export type PanelId = (typeof PANEL_IDS)[number]
 export const OBJECT_MOBILE_MAX_WIDTH = 768
 // Extra viewport-heights of scroll the sticky slider consumes.
 export const SLIDER_SCROLL_VH = 220
-// The flacon silhouette trails the panel track for a parallax offset.
-export const SILHOUETTE_PARALLAX = 0.35
+// Panel images drift vertically within their frame as the track scrolls past.
+export const PANEL_IMAGE_PARALLAX = -12

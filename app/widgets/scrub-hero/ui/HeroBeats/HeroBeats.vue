@@ -7,6 +7,9 @@ const { t } = useI18n()
 
 const TRANSLATE_PX = 12
 
+// `name` lives in the <h1> and on the flacon itself — no visible beat for it.
+const beats = HERO_BEATS.filter((beat) => beat.id !== 'name')
+
 const styleFor = (from: number, to: number) => {
   const opacity = beatOpacity(props.progress, from, to)
   return {
@@ -17,9 +20,11 @@ const styleFor = (from: number, to: number) => {
 </script>
 
 <template>
-  <div class="pointer-events-none absolute inset-0 grid place-items-center text-center">
+  <div
+    class="pointer-events-none absolute inset-x-0 top-[18%] grid place-items-center text-center"
+  >
     <p
-      v-for="beat in HERO_BEATS"
+      v-for="beat in beats"
       :key="beat.id"
       :data-beat="beat.id"
       class="absolute px-6 font-display text-2xl text-ink sm:text-4xl"
