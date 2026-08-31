@@ -1,39 +1,87 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { SectionShell } from '~/shared/ui'
 import { getFragrance, NoteList } from '~/entities/fragrance'
-import { useReducedMotion } from '~/shared/lib'
+import { loadGsap } from '~/shared/lib'
 import type { Locale } from '~/shared/config/i18n'
-import { REVEAL_START, STAGGER_S, TIERS } from '~/widgets/composition/model/constants'
+import {
+  BACKDROP_PARALLAX_PERCENT,
+  DEFAULT_ROW_PARALLAX,
+  REVEAL_START,
+  ROW_PARALLAX_PERCENT,
+  ROW_STAGGER_S,
+  TIERS,
+} from '~/widgets/composition/model/constants'
 
 const { locale, t } = useI18n()
 const fragrance = computed(() => getFragrance(locale.value as Locale))
-const reduced = useReducedMotion()
 const root = ref<HTMLElement | null>(null)
 
+let kill: (() => void) | undefined
+
 onMounted(async () => {
-  if (reduced.value || !root.value) return
-  const { gsap } = await import('gsap')
-  const { ScrollTrigger } = await import('gsap/ScrollTrigger')
-  gsap.registerPlugin(ScrollTrigger)
-  gsap.from(root.value.querySelectorAll('[data-note-row]'), {
-    opacity: 0,
-    y: 16,
-    stagger: STAGGER_S,
-    scrollTrigger: { trigger: root.value, start: REVEAL_START },
-  })
+  const context = await loadGsap()
+  if (!context || !root.value) return
+  const { gsap, ScrollTrigger } = context
+  const element = root.value
+
+  const drift = gsap.context(() => {
+    gsap.to('[data-backdrop]', {
+      yPercent: -BACKDROP_PARALLAX_PERCENT,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: element,
+        start: 'top bottom',
+        end: 'bottom top',
+        scrub: true,
+      },
+    })
+    gsap.utils.toArray<HTMLElement>('[data-note-row]').forEach((row, index) => {
+      gsap.to(row, {
+        yPercent: ROW_PARALLAX_PERCENT[index] ?? DEFAULT_ROW_PARALLAX,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: element,
+          start: 'top bottom',
+          end: 'bottom top',
+          scrub: true,
+        },
+      })
+    })
+    gsap.from('[data-note-row]', {
+      opacity: 0,
+      xPercent: -6,
+      stagger: ROW_STAGGER_S,
+      duration: 0.7,
+      scrollTrigger: { trigger: element, start: REVEAL_START },
+    })
+  }, element)
+
+  ScrollTrigger.refresh()
+  kill = () => drift.revert()
 })
+
+onBeforeUnmount(() => kill?.())
 </script>
 
 <template>
   <SectionShell id="composition" title-key="sections.composition.title">
-    <div ref="root">
-      <NoteList
-        v-for="tier in TIERS"
-        :key="tier"
-        :label="t(`composition.${tier}`)"
-        :notes="fragrance.notes[tier]"
-      />
+    <div ref="root" class="relative overflow-hidden">
+      <div
+        data-backdrop
+        aria-hidden="true"
+        class="pointer-events-none absolute -inset-x-6 top-0 flex flex-col font-display text-[22vw] uppercase leading-[0.8] tracking-tight text-ink/5"
+      >
+        <span v-for="tier in TIERS" :key="tier">{{ t(`composition.${tier}`) }}</span>
+      </div>
+      <div class="relative z-10">
+        <NoteList
+          v-for="tier in TIERS"
+          :key="tier"
+          :label="t(`composition.${tier}`)"
+          :notes="fragrance.notes[tier]"
+        />
+      </div>
     </div>
   </SectionShell>
 </template>

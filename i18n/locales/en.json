@@ -30,7 +30,25 @@
     "perfumer": "Composed by an independent nose in Grasse, 2026."
   },
   "object": {
-    "body": "A heavy rectangular flacon in clear glass, 50 ml, matte-black cap, debossed mark. Filled and sealed by hand in small batches."
+    "body": "A heavy rectangular flacon in clear glass, 50 ml, matte-black cap, debossed mark. Filled and sealed by hand in small batches.",
+    "panels": {
+      "glass": {
+        "title": "The glass",
+        "body": "A rectangular block of clear glass, thick-walled, weighted to sit still on a desk."
+      },
+      "cap": {
+        "title": "The cap",
+        "body": "Matte black, machined to a soft click. No spring, no atomiser rattle."
+      },
+      "fill": {
+        "title": "The fill",
+        "body": "50 ml, poured and left to settle by hand. Small batches, a few weeks apart."
+      },
+      "batch": {
+        "title": "The batch",
+        "body": "Every flacon carries its batch number in debossed type on the base."
+      }
+    }
   },
   "ritual": {
     "step1": "Two sprays on warm skin — the inside of the wrist, the base of the throat.",

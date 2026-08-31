@@ -40,4 +40,12 @@ export default withNuxt(
       'no-restricted-imports': 'off',
     },
   },
+  {
+    // constants.ts files are the designated home for tuning literals.
+    files: ['app/**/model/constants.ts', 'app/**/*/constants.ts'],
+    rules: {
+      'no-magic-numbers': 'off',
+      '@typescript-eslint/no-magic-numbers': 'off',
+    },
+  },
 )

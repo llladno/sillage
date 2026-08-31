@@ -30,7 +30,25 @@
     "perfumer": "Composé par un nez indépendant à Grasse, 2026."
   },
   "object": {
-    "body": "Un flacon rectangulaire lourd en verre transparent, 50 ml, bouchon noir mat, marque en creux. Rempli et scellé à la main en petites séries."
+    "body": "Un flacon rectangulaire lourd en verre transparent, 50 ml, bouchon noir mat, marque en creux. Rempli et scellé à la main en petites séries.",
+    "panels": {
+      "glass": {
+        "title": "Le verre",
+        "body": "Un bloc rectangulaire de verre transparent, aux parois épaisses, lesté pour rester immobile."
+      },
+      "cap": {
+        "title": "Le bouchon",
+        "body": "Noir mat, usiné pour un clic doux. Aucun ressort, aucun cliquetis de vaporisateur."
+      },
+      "fill": {
+        "title": "Le remplissage",
+        "body": "50 ml, versés puis laissés reposer à la main. Petites séries, à quelques semaines d’intervalle."
+      },
+      "batch": {
+        "title": "Le lot",
+        "body": "Chaque flacon porte son numéro de lot gravé en creux sous la base."
+      }
+    }
   },
   "ritual": {
     "step1": "Deux vaporisations sur peau chaude — l’intérieur du poignet, la base de la gorge.",
