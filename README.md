@@ -35,21 +35,25 @@ other Nuxt project owns 3000).
 
 ## The scroll-scrub hero
 
-Ships today with `USE_PLACEHOLDER = true`
-(`app/widgets/scrub-hero/model/constants.ts`) — the canvas paints a procedural
-rotating flacon, so the mechanism works with zero art. On a reduced-motion or
-narrow viewport it renders a static fallback with every line of copy in the
-prerendered HTML.
+The canvas scrubs a 121-frame WebP sequence in `public/sequence/`
+(`USE_PLACEHOLDER = false`). It paints the nearest already-decoded frame while
+the set streams in, with `public/hero-poster.webp` as the first-paint image, so
+there is no flash. `USE_PLACEHOLDER = true` swaps back to a procedural flacon if
+the sequence is ever missing. On reduced-motion or a narrow viewport it renders
+a static fallback with every line of copy in the prerendered HTML.
 
-### Dropping in the real frame sequence
+### Regenerating the art
 
-1. Export the hero animation as `frame-0001.webp` … `frame-0120.webp`
-   (1600px wide, WebP, keep the set under ~4 MB total) into `public/sequence/`.
-2. Replace `public/hero-poster.webp` with the real first frame.
-3. Set `USE_PLACEHOLDER = false`.
+Source stills + the interpolation video live in `docs/content/`
+(the `.mp4` is gitignored — keep it locally). Rebuild every `public/` asset:
 
-No code changes; `pnpm test:e2e` stays green. Adjust `FRAME_COUNT` if the
-sequence length differs.
+```
+node scripts/process-assets.mjs   # needs ffmpeg on PATH
+```
+
+Prompts used to generate the source art: `docs/image-prompts.md`.
+If the frame count changes, update `FRAME_COUNT` in
+`app/widgets/scrub-hero/model/constants.ts`.
 
 ## Content
 
@@ -58,9 +62,9 @@ All copy is typed TS + i18n JSON — `app/entities/fragrance/model/data.ts`
 
 ## Performance
 
-Eager entry JS ≈ 118 KB gzip. GSAP + ScrollTrigger load as a lazy chunk after
-mount. `public/hero-poster.webp` is the LCP image on the fallback path —
-optimise the real one.
+Eager entry JS ≈ 120 KB gzip. GSAP + ScrollTrigger + SplitText load as a lazy
+chunk after mount. The hero frame sequence (~3.3 MB) is fetched after mount, off
+the critical path; `public/hero-poster.webp` is the LCP image.
 
 ## Not built (by design)
 
