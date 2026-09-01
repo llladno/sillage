@@ -41,7 +41,8 @@ test('the header pill unfolds into a full-bleed bar once scrolled', async ({ pag
 
 test('a normal load pins scroll to the top', async ({ page }) => {
   await page.goto('/')
-  expect(await page.evaluate(() => history.scrollRestoration)).toBe('manual')
+  // The client plugin sets this during hydration — poll rather than read once.
+  await expect.poll(() => page.evaluate(() => history.scrollRestoration)).toBe('manual')
 })
 
 test('a #section deep link keeps native scroll restoration (not force-reset)', async ({

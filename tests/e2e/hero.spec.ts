@@ -20,6 +20,6 @@ test('late beat text appears only after scrolling', async ({ page }) => {
   await page.waitForTimeout(200)
   await expect(ctaBeat).toHaveCSS('opacity', '0')
   await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight))
-  await page.waitForTimeout(300)
-  await expect(ctaBeat).not.toHaveCSS('opacity', '0')
+  // Lenis eases to the bottom over ~1s; let ScrollTrigger catch up.
+  await expect(ctaBeat).not.toHaveCSS('opacity', '0', { timeout: 8000 })
 })

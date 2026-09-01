@@ -6,16 +6,17 @@ import { loadGsap } from '~/shared/lib'
 const MS_PER_SECOND = 1000
 
 export default defineNuxtPlugin(async () => {
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
-
-  // Every load replays the intro from the top — stop the browser restoring the
-  // previous scroll position. Skipped when the URL points at a section (#anchor)
-  // so shared deep links still land where they point.
+  // Every load starts at the top so the intro replays and hydration can't
+  // strand the scroll — this is not an animation, so it runs regardless of
+  // reduced motion. Skipped when the URL points at a section (#anchor) so
+  // shared deep links still land where they point.
   const hasHashTarget = window.location.hash.length > 1
   if (!hasHashTarget && 'scrollRestoration' in window.history) {
     window.history.scrollRestoration = 'manual'
     window.scrollTo(0, 0)
   }
+
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
 
   const [{ default: Lenis }, gsapContext] = await Promise.all([
     import('lenis'),
