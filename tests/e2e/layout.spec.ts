@@ -30,10 +30,13 @@ test('the header pill unfolds into a full-bleed bar once scrolled', async ({ pag
   await page.evaluate(() => window.scrollTo(0, 400))
   await page.waitForTimeout(600)
 
-  // Stuck: flush to the edges, square, only the bottom hairline left.
+  // Stuck: flush to the edges, top square, bottom corners rounded, only the
+  // bottom hairline left.
   expect(await box('margin-left')).toBe('0px')
   expect(await box('border-top-width')).toBe('0px')
   expect(await box('border-bottom-width')).not.toBe('0px')
+  expect(await box('border-top-left-radius')).toBe('0px')
+  expect(await box('border-bottom-left-radius')).not.toBe('0px')
 })
 
 test('header nav anchors point at real sections', async ({ page }) => {

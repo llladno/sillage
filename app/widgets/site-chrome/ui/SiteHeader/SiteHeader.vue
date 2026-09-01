@@ -38,7 +38,7 @@ onBeforeUnmount(() => cleanup?.())
     :class="[
       'sticky top-0 z-40 flex items-center justify-between gap-4 border border-line px-5 py-3 backdrop-blur transition-[margin,border-radius,border-width,background-color] duration-[350ms] ease-out motion-reduce:transition-none',
       condensed
-        ? 'mx-0 mt-0 rounded-none border-x-0 border-t-0 bg-ground/95'
+        ? 'mx-0 mt-0 rounded-b-panel rounded-t-none border-x-0 border-t-0 bg-ground/95'
         : 'mx-3 mt-3 rounded-panel bg-ground/80',
     ]"
   >
