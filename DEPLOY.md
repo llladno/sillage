@@ -1,49 +1,55 @@
 # Deploy — Cloudflare Pages
 
-Fully static build (`nuxt generate` → `.output/public`) served on Cloudflare
-Pages, project **`sillage`** → `https://sillage.pages.dev`. Config in
-[`wrangler.jsonc`](./wrangler.jsonc).
+Fully static build (`nuxt generate` → `.output/public`) on Cloudflare Pages,
+project **`sillage-encre`** → `https://sillage-encre.pages.dev`.
 
-## CI/CD (default)
+## Setup (once) — connect the repo
 
-`.github/workflows/deploy.yml` deploys on every push to **`main`**:
-`pnpm install → lint → typecheck → test:unit → nuxt generate →
-wrangler pages deploy`. The full e2e suite runs separately in
-`ci.yml` on pull requests.
+Cloudflare _Workers & Pages_ → **Create** → **Pages** → **Connect to Git** →
+pick `llladno/sillage`, then:
 
-### One-time GitHub setup
+| Field                  | Value            |
+| ---------------------- | ---------------- |
+| Project name           | `sillage-encre`  |
+| Production branch      | `main`           |
+| Framework preset       | `Nuxt.js`        |
+| Build command          | `pnpm generate`  |
+| Build output directory | `.output/public` |
 
-1. **Cloudflare API token** — [dash.cloudflare.com/profile/api-tokens](https://dash.cloudflare.com/profile/api-tokens)
-   → _Create Token_ → template **"Edit Cloudflare Workers"** (or a custom token
-   with **Account · Cloudflare Pages · Edit**).
-2. **Account ID** — Cloudflare dashboard → _Workers & Pages_ → right sidebar.
-3. Repo → _Settings → Secrets and variables → Actions_ → add secrets:
-   - `CLOUDFLARE_API_TOKEN`
-   - `CLOUDFLARE_ACCOUNT_ID`
-4. First run creates the Pages project `sillage` automatically. Nothing to
-   click in the Cloudflare dashboard.
+**Environment variables** (Settings → Environment variables → Production):
 
-Trigger a deploy manually any time from the **Actions** tab → _Deploy_ →
-_Run workflow_.
+| Name                   | Value                             |
+| ---------------------- | --------------------------------- |
+| `NUXT_PUBLIC_SITE_URL` | `https://sillage-encre.pages.dev` |
+
+`.node-version` pins Node 22 for the build. pnpm is picked up from
+`pnpm-lock.yaml` + the `packageManager` field.
+
+After that, **every push to `main` builds and deploys automatically.** PRs get a
+preview URL. The full Playwright suite runs in GitHub Actions (`ci.yml`) on PRs.
+
+> If a project already exists under a different name, delete it first
+> (_Settings → Delete project_) — Pages project names can't be renamed.
 
 ## Manual deploy (fallback)
+
+If the dashboard build ever breaks:
 
 ```bash
 pnpm wrangler login   # one time
 pnpm deploy           # nuxt generate → wrangler pages deploy
 ```
 
-`pnpm deploy:preview` ships to a throwaway preview URL instead of production.
+`pnpm deploy:preview` ships to a throwaway preview URL.
 
 ## Custom domain
 
-`NUXT_PUBLIC_SITE_URL` feeds canonical tags, hreflang, the sitemap and the
-Product JSON-LD (default `https://sillage.pages.dev`, set in `nuxt.config.ts`).
+`NUXT_PUBLIC_SITE_URL` feeds canonical tags, `hreflang`, the sitemap and the
+Product JSON-LD.
 
-1. Pages → project `sillage` → **Custom domains** → add it.
-2. Set a repo **variable** `NUXT_PUBLIC_SITE_URL=https://your-domain`
-   (_Settings → Secrets and variables → Actions → Variables_). The next push
-   picks it up. For a manual deploy: `NUXT_PUBLIC_SITE_URL=https://your-domain pnpm deploy`.
+1. Pages → project → **Custom domains** → add it.
+2. Change the `NUXT_PUBLIC_SITE_URL` production variable to
+   `https://your-domain`, then redeploy (Deployments → Retry, or push).
 
 ## Caching
 

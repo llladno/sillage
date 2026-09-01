@@ -4,10 +4,9 @@
 
 **A scroll-driven landing page for a fictional niche fragrance house.**
 
-[![Deploy](https://github.com/llladno/sillage/actions/workflows/deploy.yml/badge.svg)](https://github.com/llladno/sillage/actions/workflows/deploy.yml)
 [![CI](https://github.com/llladno/sillage/actions/workflows/ci.yml/badge.svg)](https://github.com/llladno/sillage/actions/workflows/ci.yml)
 
-[**Live → sillage.pages.dev**](https://sillage.pages.dev) &nbsp;·&nbsp; English &nbsp;|&nbsp; [Русский](#-русский)
+[**Live → sillage-encre.pages.dev**](https://sillage-encre.pages.dev) &nbsp;·&nbsp; English &nbsp;|&nbsp; [Русский](#-русский)
 
 </div>
 
@@ -102,10 +101,10 @@ If the frame count changes, update `FRAME_COUNT` in
 
 ## Deployment
 
-Push to `main` → GitHub Actions runs the gate (lint · typecheck · unit) and
-deploys the static build to **Cloudflare Pages** (`sillage.pages.dev`). The full
-Playwright suite runs on pull requests. Setup and the manual `pnpm deploy`
-fallback: [**DEPLOY.md**](./DEPLOY.md).
+Push to `main` → **Cloudflare Pages** builds `nuxt generate` and publishes to
+`sillage-encre.pages.dev`. Pull requests get a preview URL and run the full
+Playwright suite via GitHub Actions (`ci.yml`). Setup and the manual
+`pnpm deploy` fallback: [**DEPLOY.md**](./DEPLOY.md).
 
 ## Not built (by design)
 
@@ -122,7 +121,7 @@ catalogue · per-fragrance routes · cart page · analytics.
 
 **Скролл-лендинг вымышленного дома нишевой парфюмерии.**
 
-[**Онлайн → sillage.pages.dev**](https://sillage.pages.dev) &nbsp;·&nbsp; [English](#sillage) &nbsp;|&nbsp; Русский
+[**Онлайн → sillage-encre.pages.dev**](https://sillage-encre.pages.dev) &nbsp;·&nbsp; [English](#sillage) &nbsp;|&nbsp; Русский
 
 </div>
 
@@ -217,9 +216,9 @@ node scripts/process-assets.mjs   # нужен ffmpeg в PATH
 
 ## Деплой
 
-Пуш в `main` → GitHub Actions прогоняет гейт (линт · типы · юнит) и заливает
-статику на **Cloudflare Pages** (`sillage.pages.dev`). Полный набор Playwright
-идёт на pull request'ах. Настройка и ручной `pnpm deploy`:
+Пуш в `main` → **Cloudflare Pages** собирает `nuxt generate` и публикует на
+`sillage-encre.pages.dev`. На pull request'ах — preview-URL и полный прогон
+Playwright через GitHub Actions (`ci.yml`). Настройка и ручной `pnpm deploy`:
 [**DEPLOY.md**](./DEPLOY.md).
 
 ## Намеренно не сделано
