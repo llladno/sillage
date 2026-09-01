@@ -17,7 +17,7 @@ export default defineNuxtConfig({
   i18n: {
     strategy: 'prefix_except_default',
     defaultLocale: 'en',
-    baseUrl: process.env.NUXT_PUBLIC_SITE_URL || 'https://sillage.man30968.workers.dev',
+    baseUrl: process.env.NUXT_PUBLIC_SITE_URL || 'https://sillage.mansurov.workers.dev',
     locales: [
       { code: 'en', language: 'en-US', file: 'en.json' },
       { code: 'fr', language: 'fr-FR', file: 'fr.json' },
@@ -37,7 +37,7 @@ export default defineNuxtConfig({
   },
 
   site: {
-    url: process.env.NUXT_PUBLIC_SITE_URL || 'https://sillage.man30968.workers.dev',
+    url: process.env.NUXT_PUBLIC_SITE_URL || 'https://sillage.mansurov.workers.dev',
   },
 
   sitemap: { autoLastmod: true },

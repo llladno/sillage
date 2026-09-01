@@ -2,7 +2,7 @@
 
 The prerendered site (`nuxt generate` → `.output/public`) ships as a Cloudflare
 **Worker with Static Assets** — no server code. Live at
-`https://sillage.man30968.workers.dev`. Config: [`wrangler.jsonc`](./wrangler.jsonc).
+`https://sillage.mansurov.workers.dev`. Config: [`wrangler.jsonc`](./wrangler.jsonc).
 
 ## Setup (once) — connect the repo
 
@@ -23,7 +23,7 @@ deploys after that; other branches get a preview version URL.
 
 ### The site URL
 
-The Worker is served at `https://sillage.man30968.workers.dev`, which is the
+The Worker is served at `https://sillage.mansurov.workers.dev`, which is the
 default in `nuxt.config.ts`. To move to a custom domain: Worker →
 **Settings → Domains & Routes** → add it, then set a **build** variable
 (**Settings → Build → Variables and Secrets**):

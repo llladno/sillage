@@ -6,7 +6,7 @@
 
 [![CI](https://github.com/llladno/sillage/actions/workflows/ci.yml/badge.svg)](https://github.com/llladno/sillage/actions/workflows/ci.yml)
 
-[**Live**](https://sillage.man30968.workers.dev) &nbsp;·&nbsp; English &nbsp;|&nbsp; [Русский](#-русский)
+[**Live**](https://sillage.mansurov.workers.dev) &nbsp;·&nbsp; English &nbsp;|&nbsp; [Русский](#-русский)
 
 </div>
 
@@ -121,7 +121,7 @@ catalogue · per-fragrance routes · cart page · analytics.
 
 **Скролл-лендинг вымышленного дома нишевой парфюмерии.**
 
-[**Онлайн**](https://sillage.man30968.workers.dev) &nbsp;·&nbsp; [English](#sillage) &nbsp;|&nbsp; Русский
+[**Онлайн**](https://sillage.mansurov.workers.dev) &nbsp;·&nbsp; [English](#sillage) &nbsp;|&nbsp; Русский
 
 </div>
 
