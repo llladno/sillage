@@ -46,7 +46,7 @@ onKeyStroke('Escape', close)
     <Transition name="dropdown">
       <ul
         v-show="open"
-        class="panel absolute right-0 top-full z-50 mt-2 min-w-40 overflow-hidden rounded-panel bg-ground/90 py-1 backdrop-blur"
+        class="panel absolute -right-5 top-full z-50 mt-4 min-w-40 overflow-hidden rounded-panel bg-ground/90 py-1 backdrop-blur"
       >
         <li v-for="code in LOCALES" :key="code">
           <NuxtLink
