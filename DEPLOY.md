@@ -1,7 +1,8 @@
 # Deploy — Cloudflare (Workers Static Assets)
 
 The prerendered site (`nuxt generate` → `.output/public`) ships as a Cloudflare
-**Worker with Static Assets** — no server code. Config: [`wrangler.jsonc`](./wrangler.jsonc).
+**Worker with Static Assets** — no server code. Live at
+`https://sillage.man30968.workers.dev`. Config: [`wrangler.jsonc`](./wrangler.jsonc).
 
 ## Setup (once) — connect the repo
 
@@ -22,16 +23,17 @@ deploys after that; other branches get a preview version URL.
 
 ### The site URL
 
-The Worker is served at `https://sillage.<your-account-subdomain>.workers.dev`.
-After the first deploy, add a **build** variable
-(project → **Settings → Build → Variables and Secrets**):
+The Worker is served at `https://sillage.man30968.workers.dev`, which is the
+default in `nuxt.config.ts`. To move to a custom domain: Worker →
+**Settings → Domains & Routes** → add it, then set a **build** variable
+(**Settings → Build → Variables and Secrets**):
 
-| Name                   | Value                                        |
-| ---------------------- | -------------------------------------------- |
-| `NUXT_PUBLIC_SITE_URL` | that `…workers.dev` URL (or a custom domain) |
+| Name                   | Value                 |
+| ---------------------- | --------------------- |
+| `NUXT_PUBLIC_SITE_URL` | `https://your-domain` |
 
 and redeploy — it feeds `<link rel="canonical">`, `hreflang`, the sitemap and
-the Product JSON-LD (until then they fall back to the default in
+the Product JSON-LD (otherwise they use the default in
 `nuxt.config.ts`). A custom domain: Worker → **Settings → Domains & Routes**.
 
 ## Manual deploy (fallback)
