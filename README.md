@@ -1,72 +1,229 @@
+<div align="center">
+
 # SILLAGE
 
-A single-page marketing site for a fictional niche fragrance house, built as a
-portfolio piece. The centrepiece is a **scroll-scrubbed canvas hero**: a flacon
-rotates, its cap lifts, a mist drifts off as a scent trail — the meaning of
-_sillage_. Below it: composition pyramid, story, the object, ritual, a faked
-"acquire" flow, and a faked newsletter.
+**A scroll-driven landing page for a fictional niche fragrance house.**
 
-Nothing is real — no commerce, no email capture. "Add to bag" and "Join" are
-client-side theatre.
+[![Deploy](https://github.com/llladno/sillage/actions/workflows/deploy.yml/badge.svg)](https://github.com/llladno/sillage/actions/workflows/deploy.yml)
+[![CI](https://github.com/llladno/sillage/actions/workflows/ci.yml/badge.svg)](https://github.com/llladno/sillage/actions/workflows/ci.yml)
+
+[**Live → sillage.pages.dev**](https://sillage.pages.dev) &nbsp;·&nbsp; English &nbsp;|&nbsp; [Русский](#-русский)
+
+</div>
+
+---
+
+_Sillage_ (fr., "wake") — the trail a scent leaves behind. The site is one page:
+a scroll-scrubbed canvas hero where a flacon turns and a mist drifts off, then
+the fragrance's composition pyramid, its story, the object itself, the ritual,
+a faked "acquire" flow and a faked newsletter.
+
+Nothing here is real — no commerce, no e-mail capture. "Add to bag" and "Join"
+are client-side theatre. It's a portfolio piece.
+
+## Highlights
+
+- **Scroll-scrubbed hero** — a 121-frame WebP sequence painted on `<canvas>`,
+  streamed after mount with a poster frame for a flash-free LCP. Falls back to a
+  static hero under reduced motion or on a narrow viewport, with every line of
+  copy in the prerendered HTML.
+- **Momentum scrolling** — Lenis driven off the GSAP ticker, so every
+  ScrollTrigger stays locked to the smoothed position. Disabled under
+  `prefers-reduced-motion`.
+- **Backdrop scenes** — large muted photographs surface behind the content as
+  each section reaches the viewport, alternating left / right with a parallax
+  drift.
+- **Condensing header** — a floating pill at the top that unfolds into a
+  full-bleed bar once you scroll, with hysteresis so it can't flicker.
+- **Three locales** — EN at `/`, FR at `/fr/`, RU at `/ru/`
+  (`prefix_except_default`), a custom language dropdown, full `hreflang` +
+  canonical + a localized sitemap.
+- **SEO** — per-locale `<title>` / meta, Product JSON-LD, `@nuxtjs/sitemap` +
+  `@nuxtjs/robots`.
+- **Static** — `nuxt generate`, every route prerendered, zero server runtime.
 
 ## Stack
 
-Nuxt 4 (SSG) · Vue 3 · TypeScript strict · Tailwind v4 (CSS-first) ·
-GSAP + ScrollTrigger (dynamic-imported, lazy) · @nuxtjs/i18n v10 (EN `/`,
-FR `/fr/*`) · Playwright + axe · Vitest · ESLint (arrow-only, named constants,
-`~` imports, light-FSD layering) + Prettier + lefthook.
+Nuxt 4 (SSG) · Vue 3 · TypeScript (strict) · Tailwind v4 (CSS-first, no config
+file) · GSAP + ScrollTrigger + SplitText (lazy-imported) · Lenis · `@nuxt/image`
+· `@nuxtjs/i18n` v10 · `@nuxtjs/sitemap` + `@nuxtjs/robots` · Playwright +
+`@axe-core/playwright` · Vitest · ESLint (arrow-only, named constants, `~`
+imports, FSD layering) + Prettier + lefthook.
 
-## Commands
+## Quick start
+
+```bash
+pnpm install
+pnpm dev            # http://localhost:3000
+```
 
 | Task              | Command                                            |
 | ----------------- | -------------------------------------------------- |
-| Install           | `pnpm install`                                     |
 | Dev server        | `pnpm dev`                                         |
-| Static build      | `pnpm generate` (set `NUXT_PUBLIC_SITE_URL`)       |
+| Static build      | `pnpm generate`                                    |
 | Preview the build | `pnpm preview`                                     |
-| Lint              | `pnpm lint` (fix: `pnpm lint:fix`)                 |
+| Lint / fix        | `pnpm lint` · `pnpm lint:fix`                      |
 | Types             | `pnpm typecheck`                                   |
 | Unit tests        | `pnpm test:unit`                                   |
-| E2E               | `pnpm test:e2e` (`pnpm generate && preview` first) |
-| Placeholder art   | `pnpm assets:placeholder`                          |
+| E2E (+ a11y)      | `pnpm test:e2e` (builds & serves on port **3100**) |
+| Deploy            | `pnpm deploy` — see [DEPLOY.md](./DEPLOY.md)       |
 
-`pnpm test:e2e` serves the real static output on port **3100** (the machine's
-other Nuxt project owns 3000).
+## Architecture — light FSD
 
-## The scroll-scrub hero
-
-The canvas scrubs a 121-frame WebP sequence in `public/sequence/`
-(`USE_PLACEHOLDER = false`). It paints the nearest already-decoded frame while
-the set streams in, with `public/hero-poster.webp` as the first-paint image, so
-there is no flash. `USE_PLACEHOLDER = true` swaps back to a procedural flacon if
-the sequence is ever missing. On reduced-motion or a narrow viewport it renders
-a static fallback with every line of copy in the prerendered HTML.
-
-### Regenerating the art
-
-Source stills + the interpolation video live in `docs/content/`
-(the `.mp4` is gitignored — keep it locally). Rebuild every `public/` asset:
+Layers under `app/`, imports flow downward only (ESLint-enforced):
 
 ```
+app/
+  pages/        index.vue — the single page
+  widgets/      scrub-hero · backdrop-scenes · composition · story · object
+                ritual · acquire · newsletter · site-chrome
+  entities/     fragrance — typed content (notes, sizes, concept)
+  shared/       config · lib (composables) · ui (dumb components)
+  plugins/      lenis.client.ts
+i18n/locales/   en.json · fr.json · ru.json
+public/         sequence/ (121 frames) · images · _headers
+```
+
+Content is typed TS + i18n JSON: `app/entities/fragrance/model/data.ts` for the
+fragrance itself, `i18n/locales/*.json` for everything else. Every meaningful
+literal is a named constant in a `model/constants.ts`.
+
+### Regenerating the hero art
+
+Source stills + the interpolation video live in `docs/content/` (the `.mp4` is
+gitignored — keep it locally). Rebuild every `public/` asset:
+
+```bash
 node scripts/process-assets.mjs   # needs ffmpeg on PATH
 ```
 
-Prompts used to generate the source art: `docs/image-prompts.md`.
 If the frame count changes, update `FRAME_COUNT` in
 `app/widgets/scrub-hero/model/constants.ts`.
 
-## Content
+## Deployment
 
-All copy is typed TS + i18n JSON — `app/entities/fragrance/model/data.ts`
-(notes, sizes, concept) and `i18n/locales/{en,fr}.json` (everything else).
-
-## Performance
-
-Eager entry JS ≈ 120 KB gzip. GSAP + ScrollTrigger + SplitText load as a lazy
-chunk after mount. The hero frame sequence (~3.3 MB) is fetched after mount, off
-the critical path; `public/hero-poster.webp` is the LCP image.
+Push to `main` → GitHub Actions runs the gate (lint · typecheck · unit) and
+deploys the static build to **Cloudflare Pages** (`sillage.pages.dev`). The full
+Playwright suite runs on pull requests. Setup and the manual `pnpm deploy`
+fallback: [**DEPLOY.md**](./DEPLOY.md).
 
 ## Not built (by design)
 
-Real backend / commerce / payment, real email capture, CMS, multi-fragrance
-catalogue, per-fragrance routes, cart page, theme toggle, analytics.
+Real backend / commerce / payment · real e-mail capture · CMS · multi-fragrance
+catalogue · per-fragrance routes · cart page · analytics.
+
+<br>
+
+---
+
+<div align="center">
+
+## 🇷🇺 Русский
+
+**Скролл-лендинг вымышленного дома нишевой парфюмерии.**
+
+[**Онлайн → sillage.pages.dev**](https://sillage.pages.dev) &nbsp;·&nbsp; [English](#sillage) &nbsp;|&nbsp; Русский
+
+</div>
+
+---
+
+_Sillage_ (фр. «шлейф») — след, который аромат оставляет за собой. Сайт — одна
+страница: герой на `<canvas>`, «проматываемый» скроллом (флакон поворачивается,
+с него сходит дымка), затем пирамида композиции аромата, его история, сам
+объект, ритуал, бутафорский флоу «покупки» и бутафорская рассылка.
+
+Ничего настоящего — ни магазина, ни сбора почты. «В корзину» и «Подписаться» —
+клиентский театр. Это портфолио-проект.
+
+## Ключевое
+
+- **Скролл-скраб герой** — секвенция из 121 WebP-кадра, рисуется на `<canvas>`,
+  подгружается после монтирования, постер-кадр закрывает первую отрисовку (LCP
+  без вспышки). Под `prefers-reduced-motion` и на узком вьюпорте — статичный
+  вариант, весь текст уже в пререндер-HTML.
+- **Инерционный скролл** — Lenis на тикере GSAP, все ScrollTrigger привязаны к
+  сглаженной позиции. Отключается при `prefers-reduced-motion`.
+- **Фоновые сцены** — крупные приглушённые фотографии всплывают за контентом,
+  когда секция входит во вьюпорт, поочерёдно слева / справа, с параллаксом.
+- **Сжимающийся хедер** — плавающая «пилюля» вверху разворачивается в
+  полноширинную планку при скролле, с гистерезисом против мерцания.
+- **Три локали** — EN на `/`, FR на `/fr/`, RU на `/ru/`
+  (`prefix_except_default`), кастомный дропдаун языка, полные `hreflang` +
+  canonical + локализованный sitemap.
+- **SEO** — `<title>` / meta по локалям, Product JSON-LD, `@nuxtjs/sitemap` +
+  `@nuxtjs/robots`.
+- **Статика** — `nuxt generate`, все маршруты пререндерятся, серверного
+  рантайма нет.
+
+## Стек
+
+Nuxt 4 (SSG) · Vue 3 · TypeScript (strict) · Tailwind v4 (CSS-first, без
+конфига) · GSAP + ScrollTrigger + SplitText (ленивый импорт) · Lenis ·
+`@nuxt/image` · `@nuxtjs/i18n` v10 · `@nuxtjs/sitemap` + `@nuxtjs/robots` ·
+Playwright + `@axe-core/playwright` · Vitest · ESLint (только стрелочные
+функции, именованные константы, импорты через `~`, слои FSD) + Prettier +
+lefthook.
+
+## Быстрый старт
+
+```bash
+pnpm install
+pnpm dev            # http://localhost:3000
+```
+
+| Задача              | Команда                                              |
+| ------------------- | ---------------------------------------------------- |
+| Дев-сервер          | `pnpm dev`                                           |
+| Статическая сборка  | `pnpm generate`                                      |
+| Предпросмотр сборки | `pnpm preview`                                       |
+| Линт / фикс         | `pnpm lint` · `pnpm lint:fix`                        |
+| Типы                | `pnpm typecheck`                                     |
+| Юнит-тесты          | `pnpm test:unit`                                     |
+| E2E (+ a11y)        | `pnpm test:e2e` (сборка и раздача на порту **3100**) |
+| Деплой              | `pnpm deploy` — см. [DEPLOY.md](./DEPLOY.md)         |
+
+## Архитектура — облегчённый FSD
+
+Слои внутри `app/`, импорты только вниз (следит ESLint):
+
+```
+app/
+  pages/        index.vue — единственная страница
+  widgets/      scrub-hero · backdrop-scenes · composition · story · object
+                ritual · acquire · newsletter · site-chrome
+  entities/     fragrance — типизированный контент (ноты, объёмы, концепт)
+  shared/       config · lib (композаблы) · ui (тупые компоненты)
+  plugins/      lenis.client.ts
+i18n/locales/   en.json · fr.json · ru.json
+public/         sequence/ (121 кадр) · изображения · _headers
+```
+
+Контент — типизированный TS + i18n JSON: `app/entities/fragrance/model/data.ts`
+для самого аромата, `i18n/locales/*.json` для остального. Каждый значимый
+литерал — именованная константа в `model/constants.ts`.
+
+### Перегенерация арта героя
+
+Исходные кадры и видео-интерполяция лежат в `docs/content/` (`.mp4` в
+`.gitignore` — держи локально). Пересобрать все ассеты `public/`:
+
+```bash
+node scripts/process-assets.mjs   # нужен ffmpeg в PATH
+```
+
+Если число кадров изменилось — поправь `FRAME_COUNT` в
+`app/widgets/scrub-hero/model/constants.ts`.
+
+## Деплой
+
+Пуш в `main` → GitHub Actions прогоняет гейт (линт · типы · юнит) и заливает
+статику на **Cloudflare Pages** (`sillage.pages.dev`). Полный набор Playwright
+идёт на pull request'ах. Настройка и ручной `pnpm deploy`:
+[**DEPLOY.md**](./DEPLOY.md).
+
+## Намеренно не сделано
+
+Настоящий бэкенд / магазин / оплата · реальный сбор почты · CMS · каталог из
+нескольких ароматов · отдельные маршруты на аромат · страница корзины ·
+аналитика.
