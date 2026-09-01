@@ -15,10 +15,18 @@ test('the language dropdown switches locale', async ({ page }) => {
   await expect(page.locator('html')).toHaveAttribute('lang', /fr/)
 })
 
+test('RU route renders Russian nav labels', async ({ page }) => {
+  await page.goto('/ru/')
+  await expect(page.locator('html')).toHaveAttribute('lang', /ru/)
+  await expect(page.getByRole('link', { name: 'История', exact: true })).toBeVisible()
+  await expect(page.getByRole('link', { name: 'Приобрести', exact: true })).toBeVisible()
+})
+
 test('both routes expose hreflang alternates', async ({ page }) => {
   await page.goto('/')
   await expect(page.locator('link[rel="alternate"][hreflang="fr"]')).toHaveCount(1)
   await expect(page.locator('link[rel="alternate"][hreflang="en"]')).toHaveCount(1)
+  await expect(page.locator('link[rel="alternate"][hreflang="ru"]')).toHaveCount(1)
 })
 
 test('canonical + html lang per locale', async ({ page }) => {

@@ -4,4 +4,5 @@ import type { Locale } from '~/shared/config/i18n'
 export const LOCALE_LABELS: Record<Locale, string> = {
   en: 'English',
   fr: 'Français',
+  ru: 'Русский',
 }

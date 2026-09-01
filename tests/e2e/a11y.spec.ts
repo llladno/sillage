@@ -1,7 +1,7 @@
 import AxeBuilder from '@axe-core/playwright'
 import { expect, test } from '@playwright/test'
 
-for (const path of ['/', '/fr/']) {
+for (const path of ['/', '/fr/', '/ru/']) {
   test(`no serious a11y violations on ${path}`, async ({ page }) => {
     await page.goto(path)
     const results = await new AxeBuilder({ page })

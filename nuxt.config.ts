@@ -21,6 +21,7 @@ export default defineNuxtConfig({
     locales: [
       { code: 'en', language: 'en-US', file: 'en.json' },
       { code: 'fr', language: 'fr-FR', file: 'fr.json' },
+      { code: 'ru', language: 'ru-RU', file: 'ru.json' },
     ],
   },
 
