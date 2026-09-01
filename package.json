@@ -14,7 +14,9 @@
     "test:unit": "vitest run",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
-    "assets:placeholder": "node scripts/gen-placeholder-assets.mjs"
+    "assets:placeholder": "node scripts/gen-placeholder-assets.mjs",
+    "deploy": "nuxt generate && wrangler pages deploy",
+    "deploy:preview": "nuxt generate && wrangler pages deploy --branch preview"
   },
   "dependencies": {
     "@nuxt/image": "^2.1.0",
@@ -43,6 +45,7 @@
     "sharp": "^0.35.4",
     "typescript": "5.9.3",
     "vitest": "^4.1.11",
-    "vue-tsc": "^3.3.11"
+    "vue-tsc": "^3.3.11",
+    "wrangler": "^4.127.1"
   }
 }

@@ -22,6 +22,9 @@ logs
 test-results
 playwright-report
 
+# Wrangler / Cloudflare Pages local state
+.wrangler
+
 # Claude
 .claude/settings.local.json
 
