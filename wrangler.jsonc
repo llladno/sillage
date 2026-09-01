@@ -1,7 +1,11 @@
 {
-  // Cloudflare Pages project for the SILLAGE static site.
-  // Deploy with `pnpm deploy` (runs `nuxt generate` then `wrangler pages deploy`).
+  // SILLAGE ships as a Cloudflare Worker with Static Assets only — no server
+  // code, just the prerendered site. `pnpm generate` produces ./.output/public;
+  // `_headers` inside it is honoured by Static Assets.
   "name": "sillage-encre",
   "compatibility_date": "2026-09-01",
-  "pages_build_output_dir": ".output/public"
+  "assets": {
+    "directory": "./.output/public",
+    "not_found_handling": "404-page"
+  }
 }

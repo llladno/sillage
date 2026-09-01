@@ -101,9 +101,9 @@ If the frame count changes, update `FRAME_COUNT` in
 
 ## Deployment
 
-Push to `main` → **Cloudflare Pages** builds `nuxt generate` and publishes to
-`sillage-encre.pages.dev`. Pull requests get a preview URL and run the full
-Playwright suite via GitHub Actions (`ci.yml`). Setup and the manual
+Push to `main` → **Cloudflare** builds `nuxt generate` and deploys it as a
+Worker with Static Assets. Non-`main` branches get a preview URL; the full
+Playwright suite runs via GitHub Actions (`ci.yml`). Setup and the manual
 `pnpm deploy` fallback: [**DEPLOY.md**](./DEPLOY.md).
 
 ## Not built (by design)
@@ -216,9 +216,9 @@ node scripts/process-assets.mjs   # нужен ffmpeg в PATH
 
 ## Деплой
 
-Пуш в `main` → **Cloudflare Pages** собирает `nuxt generate` и публикует на
-`sillage-encre.pages.dev`. На pull request'ах — preview-URL и полный прогон
-Playwright через GitHub Actions (`ci.yml`). Настройка и ручной `pnpm deploy`:
+Пуш в `main` → **Cloudflare** собирает `nuxt generate` и деплоит как Worker со
+Static Assets. Не-`main` ветки получают preview-URL; полный прогон Playwright —
+через GitHub Actions (`ci.yml`). Настройка и ручной `pnpm deploy`:
 [**DEPLOY.md**](./DEPLOY.md).
 
 ## Намеренно не сделано
