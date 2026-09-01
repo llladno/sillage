@@ -18,12 +18,29 @@ for (const path of ['/', '/fr/', '/ru/']) {
   })
 }
 
-test('product JSON-LD is present', async ({ page }) => {
+test('product JSON-LD is present and enriched', async ({ page }) => {
   await page.goto('/')
   const jsonLd = await page
     .locator('script[type="application/ld+json"]')
     .first()
     .textContent()
-  expect(jsonLd).toContain('"@type":"Product"')
-  expect(jsonLd).toContain('SILLAGE 01')
+  const data = JSON.parse(jsonLd ?? '{}')
+  expect(data['@type']).toBe('Product')
+  expect(data.name).toContain('SILLAGE 01')
+  expect(data.category).toBe('Perfume')
+  expect(data.image).toMatch(/\/og\/default\.png$/)
+  expect(data.releaseDate).toBe('2026')
+  expect(Array.isArray(data.offers)).toBe(true)
+})
+
+test('homepage title and meta description carry the category keyword', async ({
+  page,
+}) => {
+  await page.goto('/')
+  await expect(page).toHaveTitle(/eau de parfum/i)
+  const description = await page
+    .locator('meta[name="description"]')
+    .getAttribute('content')
+  expect(description).toMatch(/niche eau de parfum/i)
+  expect((description ?? '').length).toBeLessThanOrEqual(160)
 })

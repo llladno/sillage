@@ -87,7 +87,7 @@ onBeforeUnmount(() => kill?.())
           height="800"
           loading="lazy"
           class="aspect-[3/2] w-full object-cover"
-          alt=""
+          :alt="t('story.imageAlt')"
         />
       </div>
     </div>

@@ -22,7 +22,10 @@ const proseBeats = HERO_BEATS.filter((beat) => !CHROME_BEAT_IDS.includes(beat.id
     />
     <div class="absolute inset-0 bg-black/80" />
     <div class="relative text-center">
-      <Wordmark as="h1" class="block text-4xl sm:text-6xl" />
+      <h1 class="text-4xl sm:text-6xl">
+        <span class="sr-only">{{ t('hero.h1') }}</span>
+        <Wordmark aria-hidden="true" class="block" />
+      </h1>
       <p class="mt-6 font-display text-lg text-ink-dim">{{ t('hero.concept') }}</p>
       <ul class="mt-10 space-y-2 font-display text-xl text-ink">
         <li v-for="beat in proseBeats" :key="beat.id">{{ t(beat.key) }}</li>

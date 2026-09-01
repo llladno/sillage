@@ -15,19 +15,21 @@
     "newsletter": { "title": "Garder le sillage" }
   },
   "hero": {
+    "h1": "SILLAGE 01 Encre — eau de parfum de niche. L’odeur d’une lettre jamais envoyée.",
     "concept": "L’odeur d’une lettre jamais envoyée.",
     "beats": {
       "name": "SILLAGE",
       "tagline": "La traînée qu’un parfum laisse derrière lui.",
       "edition": "01 — Encre",
-      "notesLead": "Iris. Thé noir. Encre humide.",
+      "notesLead": "Métal froid. Iris. Thé noir. Encre humide.",
       "cta": "Acquérir l’édition"
     }
   },
   "composition": { "top": "Tête", "heart": "Cœur", "base": "Fond" },
   "story": {
-    "body": "Encre est construit autour de l’odeur de métal froid d’un stylo-plume et du papier qu’il n’a jamais touché. Bergamote et poivre rose ouvrent, tranchants ; iris et thé noir s’installent dans le non-dit ; vétiver, papyrus et encens sont le tiroir que l’on a refermé.",
-    "perfumer": "Composé par un nez indépendant à Grasse, 2026."
+    "body": "Encre est construit autour de l’odeur de métal froid d’un stylo-plume et du papier qu’il n’a jamais touché. Bergamote et poivre rose ouvrent, tranchants ; iris et thé noir s’installent dans le non-dit ; vétiver, papyrus et encens sont le tiroir que l’on a refermé. Une concentration eau de parfum, basse et près de la peau — le sillage d’une pensée gardée pour soi.",
+    "perfumer": "Composé par un parfumeur indépendant à Grasse, 2026.",
+    "imageAlt": "Le flacon Encre posé sur du papier à lettre jamais envoyé"
   },
   "object": {
     "body": "Un flacon rectangulaire lourd en verre transparent, 50 ml, bouchon noir mat, marque en creux. Rempli et scellé à la main en petites séries.",
@@ -70,8 +72,8 @@
     "success": "Vous êtes sur la liste."
   },
   "meta": {
-    "title": "SILLAGE 01 — Encre",
-    "description": "L’odeur d’une lettre jamais envoyée. Un eau de parfum indépendant, décanté à la main en 50 ml."
+    "title": "SILLAGE 01 Encre — eau de parfum de niche indépendante",
+    "description": "Encre, eau de parfum de niche indépendante — métal froid, thé noir et encre humide, décantée à la main en 50 ml. La traînée qu’un parfum laisse."
   },
   "footer": { "disclaimer": "SILLAGE — un projet fictif. Aucun produit n’est à vendre." }
 }

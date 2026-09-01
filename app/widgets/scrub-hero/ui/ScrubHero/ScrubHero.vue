@@ -70,7 +70,7 @@ onBeforeUnmount(() => cleanup?.())
 <template>
   <HeroFallback v-if="!isCinematic()" />
   <div v-else ref="stage" class="relative" :style="{ height: `${STAGE_SCROLL_VH}vh` }">
-    <h1 class="sr-only">{{ t('hero.beats.name') }} — {{ t('hero.concept') }}</h1>
+    <h1 class="sr-only">{{ t('hero.h1') }}</h1>
     <div
       class="sticky top-0 flex h-dvh items-center justify-center overflow-hidden bg-black"
     >
