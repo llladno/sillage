@@ -2,7 +2,7 @@
   // SILLAGE ships as a Cloudflare Worker with Static Assets only — no server
   // code, just the prerendered site. `pnpm generate` produces ./.output/public;
   // `_headers` inside it is honoured by Static Assets.
-  "name": "sillage-encre",
+  "name": "sillage",
   "compatibility_date": "2026-09-01",
   "assets": {
     "directory": "./.output/public",
