@@ -7,6 +7,14 @@ test('FR route renders French nav labels', async ({ page }) => {
   await expect(page.getByRole('link', { name: 'Acquérir', exact: true })).toBeVisible()
 })
 
+test('the language dropdown switches locale', async ({ page }) => {
+  await page.goto('/')
+  await page.getByRole('button', { name: /change language/i }).click()
+  await page.getByRole('link', { name: 'Français', exact: true }).click()
+  await expect(page).toHaveURL(/\/fr\/?$/)
+  await expect(page.locator('html')).toHaveAttribute('lang', /fr/)
+})
+
 test('both routes expose hreflang alternates', async ({ page }) => {
   await page.goto('/')
   await expect(page.locator('link[rel="alternate"][hreflang="fr"]')).toHaveCount(1)
