@@ -8,8 +8,14 @@ const { locale } = useI18n()
 
 const open = ref(false)
 const root = ref<HTMLElement | null>(null)
+const trigger = ref<HTMLButtonElement | null>(null)
 
 const close = () => {
+  // If focus is still inside the menu (Escape, or a row just activated), pull it
+  // back to the trigger so keyboard users don't get dropped onto <body>.
+  if (open.value && root.value?.contains(document.activeElement)) {
+    trigger.value?.focus()
+  }
   open.value = false
 }
 const toggle = () => {
@@ -25,6 +31,7 @@ onKeyStroke('Escape', close)
 <template>
   <div ref="root" class="relative">
     <button
+      ref="trigger"
       type="button"
       class="flex items-center gap-1.5 text-sm uppercase text-ink-dim transition-colors hover:text-ink"
       aria-haspopup="true"

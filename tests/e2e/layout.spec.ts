@@ -39,6 +39,19 @@ test('the header pill unfolds into a full-bleed bar once scrolled', async ({ pag
   expect(await box('border-bottom-left-radius')).not.toBe('0px')
 })
 
+test('a normal load pins scroll to the top', async ({ page }) => {
+  await page.goto('/')
+  expect(await page.evaluate(() => history.scrollRestoration)).toBe('manual')
+})
+
+test('a #section deep link keeps native scroll restoration (not force-reset)', async ({
+  page,
+}) => {
+  await page.goto('/#ritual')
+  await page.waitForTimeout(400)
+  expect(await page.evaluate(() => history.scrollRestoration)).toBe('auto')
+})
+
 test('header nav anchors point at real sections', async ({ page }) => {
   await page.goto('/')
   for (const id of ['composition', 'story', 'object', 'ritual', 'acquire']) {

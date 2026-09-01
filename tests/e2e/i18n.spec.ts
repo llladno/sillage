@@ -15,6 +15,17 @@ test('the language dropdown switches locale', async ({ page }) => {
   await expect(page.locator('html')).toHaveAttribute('lang', /fr/)
 })
 
+test('closing the language menu with Escape returns focus to the trigger', async ({
+  page,
+}) => {
+  await page.goto('/')
+  const trigger = page.getByRole('button', { name: /change language/i })
+  await trigger.click()
+  await page.getByRole('link', { name: 'Русский', exact: true }).focus()
+  await page.keyboard.press('Escape')
+  await expect(trigger).toBeFocused()
+})
+
 test('RU route renders Russian nav labels', async ({ page }) => {
   await page.goto('/ru/')
   await expect(page.locator('html')).toHaveAttribute('lang', /ru/)

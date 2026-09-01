@@ -4,13 +4,18 @@ import { Wordmark } from '~/shared/ui'
 import { LocaleSwitch } from '~/widgets/site-chrome/ui/LocaleSwitch'
 import { NAV_SECTIONS } from '~/shared/config/site'
 import { useBag } from '~/shared/lib'
-import { CONDENSE_SCROLL_PX } from '~/widgets/site-chrome/ui/SiteHeader/constants'
+import {
+  CONDENSE_ENTER_PX,
+  CONDENSE_EXIT_PX,
+  CONDENSE_MS,
+} from '~/widgets/site-chrome/ui/SiteHeader/constants'
 
 const { t } = useI18n()
 const bag = useBag()
 
 // Off the very top → the pill unfolds into a full-bleed bar (see the class
-// binding below). rAF-throttled, same pattern as BackdropScenes.
+// binding below). rAF-throttled, same pattern as BackdropScenes; enter/exit
+// thresholds differ so a rest near the top can't flicker the state.
 const condensed = ref(false)
 let ticking = false
 let cleanup: (() => void) | undefined
@@ -18,7 +23,9 @@ let cleanup: (() => void) | undefined
 onMounted(() => {
   const measure = () => {
     ticking = false
-    condensed.value = window.scrollY > CONDENSE_SCROLL_PX
+    const { scrollY } = window
+    if (scrollY > CONDENSE_ENTER_PX) condensed.value = true
+    else if (scrollY < CONDENSE_EXIT_PX) condensed.value = false
   }
   const onScroll = () => {
     if (ticking) return
@@ -35,8 +42,9 @@ onBeforeUnmount(() => cleanup?.())
 
 <template>
   <header
+    :style="{ transitionDuration: `${CONDENSE_MS}ms` }"
     :class="[
-      'sticky top-0 z-40 flex items-center justify-between gap-4 border border-line px-5 py-3 backdrop-blur transition-[margin,border-radius,border-width,background-color] duration-[350ms] ease-out motion-reduce:transition-none',
+      'sticky top-0 z-40 flex items-center justify-between gap-4 border border-line px-5 py-3 backdrop-blur transition-[margin,border-radius,border-width,background-color] ease-out motion-reduce:transition-none',
       condensed
         ? 'mx-0 mt-0 rounded-b-panel rounded-t-none border-x-0 border-t-0 bg-ground/95'
         : 'mx-3 mt-3 rounded-panel bg-ground/80',
